@@ -19,11 +19,11 @@ class Vertex {
     vertex_type type() const { return type_;}
 
     // ==== Edge manipulation
-    void add_out(vertex_id out, double weight = 1.0) {
+    void add_out(vertex_id out, edge_weight weight = 1.0, edge_type type = 0) {
       out_.push_back(Edge(out, weight));
     }
 
-    void add_in(vertex_id in, double weight = 1.0) {
+    void add_in(vertex_id in, edge_weight weight = 1.0, edge_type type = 0) {
       in_.push_back(Edge(in, weight));
     }
 
@@ -48,12 +48,12 @@ class Vertex {
       return p != out_.end();
     }
 
-    double out_edge_weight(vertex_id vertex) const {
+    edge_weight out_edge_weight(vertex_id vertex) const {
       EdgeList::const_iterator p = find_edge(out_, vertex);
       return p != out_.end() ? p->weight() : 0.0;
     }
 
-    double in_edge_weight(vertex_id vertex) const {
+    edge_weight in_edge_weight(vertex_id vertex) const {
       EdgeList::const_iterator p = find_edge(out_, vertex);
       return p != in_.end() ? p->weight() : 0.0;
     }

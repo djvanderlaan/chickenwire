@@ -31,7 +31,8 @@ void dump_to_file(Graph& graph, const std::string& filename) {
 Graph read_from_file(const std::string& filename) {
   std::cout << "Reading from file '" << filename << "'" << std::endl;
   std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  Graph graph = read_from_csv(filename);
+  //Graph graph = read_from_csv(filename);
+  Graph graph = graph_from_csv("example_networks/simple_vertices.csv", "example_networks/simple_edges.csv");
   std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
   double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
   std::cout << "Took " << dif << " seconds." << std::endl;
@@ -92,9 +93,12 @@ int main(int argc, char* argv[]) {
     std::cout << "Size = " << size << " ";
   }
 
-  Graph graph = generate_graph(size);
-  ncomponents(graph);
-  calc_diameter(graph);
+  Graph graph = read_from_file("foo");
+  print_graph(graph, std::cout);
+
+  //Graph graph = generate_graph(size);
+  //ncomponents(graph);
+  //calc_diameter(graph);
 
   return 0;
 }

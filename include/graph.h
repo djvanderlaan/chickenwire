@@ -27,6 +27,10 @@ class Graph {
       vertices_[id] = Vertex(id);
     }
 
+    void add_vertex(const Vertex& vertex) {
+      vertices_[vertex.id()] = vertex;
+    }
+
     void add_vertex_if_not_exists(vertex_id id) {
       VertexList::const_iterator p = vertices_.find(id);
       if (p == vertices_.end()) vertices_[id] = Vertex(id);
@@ -44,14 +48,14 @@ class Graph {
       return p->second;
     }
     
-    void add_edge(vertex_id from, vertex_id to, double weight = 1.0) {
+    void add_edge(vertex_id from, vertex_id to, edge_weight weight = 1.0, edge_type type = 0) {
       Vertex& from_vertex = get_vertex(from);
       Vertex& to_vertex = get_vertex(to);
-      from_vertex.add_out(to, weight);
-      to_vertex.add_in(from, weight);
+      from_vertex.add_out(to, weight, type);
+      to_vertex.add_in(from, weight, type);
       if (!directed()) {
-        from_vertex.add_in(to, weight);
-        to_vertex.add_out(from, weight);
+        from_vertex.add_in(to, weight, type);
+        to_vertex.add_out(from, weight, type);
       }
     }
 

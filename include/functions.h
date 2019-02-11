@@ -15,6 +15,8 @@ Graph read_from_csv(const std::string& filename);
 void write_to_csv(const Graph& graph, std::ostream& output);
 void write_to_csv(const Graph& graph, const std::string& filename);
 
+#include "csv.h"
+
 // ==== Shortest path
 // Defined in dijkstra.cpp
 double shortest_path(const Graph& graph, vertex_id from, vertex_id to);
