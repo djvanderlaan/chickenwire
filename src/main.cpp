@@ -1,5 +1,6 @@
 #include "graph.h"
 #include "functions.h"
+#include "filter_edges.h"
 
 #include <iostream>
 #include <iomanip>
@@ -22,7 +23,7 @@ Graph generate_graph(int size) {
 void dump_to_file(Graph& graph, const std::string& filename) {
   std::cout << "Dumping to file '" << filename << "'" << std::endl;
   std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  write_to_csv(graph, filename);
+  graph_to_csv(graph, filename + "_vertices.csv", filename + "_edges.csv"); 
   std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
   double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
   std::cout << "Took " << dif << " seconds." << std::endl;
@@ -31,8 +32,7 @@ void dump_to_file(Graph& graph, const std::string& filename) {
 Graph read_from_file(const std::string& filename) {
   std::cout << "Reading from file '" << filename << "'" << std::endl;
   std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  //Graph graph = read_from_csv(filename);
-  Graph graph = graph_from_csv("example_networks/simple_vertices.csv", "example_networks/simple_edges.csv");
+  Graph graph = graph_from_csv(filename + "_vertices.csv", filename + "_edges.csv"); 
   std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
   double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
   std::cout << "Took " << dif << " seconds." << std::endl;
@@ -93,8 +93,14 @@ int main(int argc, char* argv[]) {
     std::cout << "Size = " << size << " ";
   }
 
-  Graph graph = read_from_file("foo");
+  Graph graph = read_from_file("example_networks/simple");
+
+  filter_edges_on_type(graph, 2);
+  reweigh_edges_by_vertex_and_type(graph);
+
   print_graph(graph, std::cout);
+
+  dump_to_file(graph, "test");
 
   //Graph graph = generate_graph(size);
   //ncomponents(graph);

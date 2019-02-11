@@ -71,6 +71,8 @@ class Graph {
     }
 
     const VertexList& vertices() const { return vertices_;}
+    VertexList& vertices_nonconst() { return vertices_;}
+
 
   private:
     Vertex& get_vertex(vertex_id id) {

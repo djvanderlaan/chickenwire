@@ -20,11 +20,11 @@ class Vertex {
 
     // ==== Edge manipulation
     void add_out(vertex_id out, edge_weight weight = 1.0, edge_type type = 0) {
-      out_.push_back(Edge(out, weight));
+      out_.push_back(Edge(out, weight, type));
     }
 
     void add_in(vertex_id in, edge_weight weight = 1.0, edge_type type = 0) {
-      in_.push_back(Edge(in, weight));
+      in_.push_back(Edge(in, weight, type));
     }
 
     void remove_out(vertex_id out) {
@@ -63,6 +63,9 @@ class Vertex {
 
     const EdgeList& edges_out() const { return out_;}
     const EdgeList& edges_in() const { return in_;}
+
+    EdgeList& edges_out_nonconst() { return out_;}
+    EdgeList& edges_in_nonconst() { return in_;}
 
   private:
     vertex_id id_;
