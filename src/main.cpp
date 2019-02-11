@@ -19,24 +19,24 @@ Graph generate_graph(int size) {
   return graph;
 }
 
-void dump_to_file(Graph& graph, const std::string& filename) {
-  std::cout << "Dumping to file '" << filename << "'" << std::endl;
-  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  write_to_csv(graph, filename);
-  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
-  std::cout << "Took " << dif << " seconds." << std::endl;
-}
+//void dump_to_file(Graph& graph, const std::string& filename) {
+//  std::cout << "Dumping to file '" << filename << "'" << std::endl;
+//  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+//  write_to_csv(graph, filename);
+//  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+//  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
+//  std::cout << "Took " << dif << " seconds." << std::endl;
+//}
 
-Graph read_from_file(const std::string& filename) {
-  std::cout << "Reading from file '" << filename << "'" << std::endl;
-  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  Graph graph = read_from_csv(filename);
-  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
-  std::cout << "Took " << dif << " seconds." << std::endl;
-  return graph;
-}
+//Graph read_from_file(const std::string& filename) {
+//  std::cout << "Reading from file '" << filename << "'" << std::endl;
+//  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+//  Graph graph = read_from_csv(filename);
+//  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+//  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
+//  std::cout << "Took " << dif << " seconds." << std::endl;
+//  return graph;
+//}
 
 unsigned int ncomponents(const Graph& graph) {
   std::cout << "Computing connected components" << std::endl;
@@ -53,35 +53,35 @@ unsigned int ncomponents(const Graph& graph) {
   return unique_components.size();
 }
 
-int calc_diameter(const Graph& graph) {
-  std::cout << "Computing diameter" << std::endl;
-  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  int diam = diameter(graph);
-  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-  std::cout << "Diameter = " << diam << std::endl;
-  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
-  std::cout << "Took " << dif << " seconds." << std::endl;
-  return diam;
-}
+//int calc_diameter(const Graph& graph) {
+//  std::cout << "Computing diameter" << std::endl;
+//  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+//  int diam = diameter(graph);
+//  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+//  std::cout << "Diameter = " << diam << std::endl;
+//  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
+//  std::cout << "Took " << dif << " seconds." << std::endl;
+//  return diam;
+//}
 
-void print_graph(const Graph& graph, std::ostream& out) {
-  const VertexList& v = graph.vertices();
-  for (auto p = v.begin(); p != v.end(); ++p) {
-    out << "(" << p->first << ") "; //<< 
-      //" out degree: " << p->second.out_degree() << 
-      //" in degree: " << p->second.in_degree() << "\n  ";
-    const EdgeList& edges_out = p->second.edges_out();
-    for (auto q = edges_out.cbegin(); q != edges_out.cend(); ++q) {
-      out << "->(" << q->first << ") ";
-    }
-    const EdgeList edges_in = p->second.edges_in();
-    std::cout << "\n  ";
-    for (auto q = edges_in.begin(); q != edges_in.end(); ++q) {
-      out << "<-(" << q->first << ") ";
-    }
-    out << "\n";
-  }
-}
+//void print_graph(const Graph& graph, std::ostream& out) {
+//  const VertexList& v = graph.vertices();
+//  for (auto p = v.begin(); p != v.end(); ++p) {
+//    out << "(" << p->first << ") "; //<< 
+//      //" out degree: " << p->second.out_degree() << 
+//      //" in degree: " << p->second.in_degree() << "\n  ";
+//    const EdgeList& edges_out = p->second.edges_out();
+//    for (auto q = edges_out.cbegin(); q != edges_out.cend(); ++q) {
+//      out << "->(" << q->first << ") ";
+//    }
+//    const EdgeList edges_in = p->second.edges_in();
+//    std::cout << "\n  ";
+//    for (auto q = edges_in.begin(); q != edges_in.end(); ++q) {
+//      out << "<-(" << q->first << ") ";
+//    }
+//    out << "\n";
+//  }
+//}
 
 
 
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
 
   Graph graph = generate_graph(size);
   ncomponents(graph);
-  calc_diameter(graph);
+ // calc_diameter(graph);
 
   return 0;
 }
