@@ -41,11 +41,11 @@ double shortest_path(const Graph& graph, vertex_id from, vertex_id to) {
     const Vertex& v = graph.vertex(i.vertex);
     const EdgeList& edges = v.edges_out();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
-      auto f = path_lengths.find(j->first);
-      double newl = i.path_length + j->second;
+      auto f = path_lengths.find(j->dst());
+      double newl = i.path_length + j->weight();
       if (f == path_lengths.end() || f->second > newl) {
-        path_lengths[j->first] = newl;
-        queue.push(QueueEl{newl, j->first});
+        path_lengths[j->dst()] = newl;
+        queue.push(QueueEl{newl, j->dst()});
       }
     }
     queue.pop();
@@ -77,11 +77,11 @@ double max_shortest_path(const Graph& graph, vertex_id from) {
     const Vertex& v = graph.vertex(i.vertex);
     const EdgeList& edges = v.edges_out();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
-      auto f = path_lengths.find(j->first);
-      double newl = i.path_length + j->second;
+      auto f = path_lengths.find(j->dst());
+      double newl = i.path_length + j->weight();
       if (f == path_lengths.end() || f->second > newl) {
-        path_lengths[j->first] = newl;
-        queue.push(QueueEl{newl, j->first});
+        path_lengths[j->dst()] = newl;
+        queue.push(QueueEl{newl, j->dst()});
       }
     }
     queue.pop();

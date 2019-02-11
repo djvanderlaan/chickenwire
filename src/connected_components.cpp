@@ -24,15 +24,15 @@ Components connected_components(const Graph& graph) {
     for (auto p = vertices.begin(); p != vertices.end(); ++p) {
       const EdgeList& edges_out = p->second.edges_out();
       for (auto q = edges_out.cbegin(); q != edges_out.cend(); ++q) {
-        if (components[q->first] > components[p->first]) {
-          components[q->first] = components[p->first];
+        if (components[q->dst()] > components[p->first]) {
+          components[q->dst()] = components[p->first];
           iterate = true;
         }
       }
       const EdgeList& edges_in = p->second.edges_in();
       for (auto q = edges_in.cbegin(); q != edges_in.cend(); ++q) {
-        if (components[q->first] > components[p->first]) {
-          components[q->first] = components[p->first];
+        if (components[q->dst()] > components[p->first]) {
+          components[q->dst()] = components[p->first];
           iterate = true;
         }
       }

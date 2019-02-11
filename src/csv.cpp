@@ -87,9 +87,9 @@ void write_to_csv(const Graph& graph, std::ostream& output) {
   for (auto p = v.begin(); p != v.end(); ++p) {
     const EdgeList& edges = p->second.edges_out();
     for (auto q = edges.cbegin(); q != edges.cend(); ++q) {
-      if (p->first >= q->first) continue;
-      output << p->first << ';' << q->first;
-      if (q->second != 1.0) output << ';' << q->second;
+      if (p->first >= q->dst()) continue;
+      output << p->first << ';' << q->dst();
+      if (q->weight() != 1.0) output << ';' << q->weight();
       output << '\n';
     }
   }

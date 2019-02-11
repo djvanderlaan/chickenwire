@@ -72,12 +72,12 @@ void print_graph(const Graph& graph, std::ostream& out) {
       //" in degree: " << p->second.in_degree() << "\n  ";
     const EdgeList& edges_out = p->second.edges_out();
     for (auto q = edges_out.cbegin(); q != edges_out.cend(); ++q) {
-      out << "->(" << q->first << ") ";
+      out << "->(" << q->dst() << ") ";
     }
     const EdgeList edges_in = p->second.edges_in();
     std::cout << "\n  ";
     for (auto q = edges_in.begin(); q != edges_in.end(); ++q) {
-      out << "<-(" << q->first << ") ";
+      out << "<-(" << q->dst() << ") ";
     }
     out << "\n";
   }
