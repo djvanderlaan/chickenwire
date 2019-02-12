@@ -1,9 +1,9 @@
 #include "filter_edges.h"
 #include <algorithm>
 
-class is_of_type {
+class edge_is_of_type {
   public:
-    is_of_type(edge_type type): type_(type) {}
+    edge_is_of_type(edge_type type): type_(type) {}
 
     bool operator()(const Edge& edge) {
       return edge.type() == type_;
@@ -18,10 +18,10 @@ void filter_edges_on_type(Graph& graph, edge_type type) {
   for (auto vertexp = vertices.begin(); vertexp != vertices.end(); ++vertexp) {
     EdgeList& edges_out = vertexp->second.edges_out_nonconst();
     edges_out.erase(std::remove_if(edges_out.begin(), edges_out.end(), 
-      is_of_type(type)), edges_out.end());
+      edge_is_of_type(type)), edges_out.end());
     EdgeList& edges_in = vertexp->second.edges_in_nonconst();
     edges_in.erase(std::remove_if(edges_in.begin(), edges_in.end(), 
-      is_of_type(type)), edges_in.end());
+      edge_is_of_type(type)), edges_in.end());
   }
 }
 
