@@ -7,6 +7,7 @@
 inline double runif() {
   return (double)std::rand() / (double)RAND_MAX;
 }
+
 Graph& barabasi_albert(Graph& graph, VertexList::size_type size) {
   //const unsigned int blocksize = 2000;
   unsigned int blocksize = std::max(std::round(std::sqrt((double)size/1E6*2.0)), 1.0) * 1024;

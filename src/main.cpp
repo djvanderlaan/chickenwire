@@ -1,6 +1,8 @@
 #include "graph.h"
 #include "functions.h"
 #include "filter_edges.h"
+#include "random_walk.h"
+#include "random_graph.h"
 
 #include <iostream>
 #include <iomanip>
@@ -93,14 +95,38 @@ int main(int argc, char* argv[]) {
     std::cout << "Size = " << size << " ";
   }
 
-  Graph graph = read_from_file("example_networks/simple");
+  //Graph graph = read_from_file("example_networks/simple");
 
-  filter_edges_on_type(graph, 2);
-  reweigh_edges_by_vertex_and_type(graph);
+  std::chrono::high_resolution_clock::time_point t1a = std::chrono::high_resolution_clock::now();
+  std::cout << "Generating graph" << std::endl;
+  Graph graph(true);
+  random_graph(graph, size, std::min(0.2, 20.0/size));
+  std::chrono::high_resolution_clock::time_point t2a = std::chrono::high_resolution_clock::now();
+  double difa = std::chrono::duration_cast<std::chrono::seconds>( t2a - t1a ).count();
+  std::cout << "Took " << difa << " seconds." << std::endl;
 
-  print_graph(graph, std::cout);
+  //filter_edges_on_type(graph, 2);
+  //reweigh_edges_by_vertex_and_type(graph);
+  reweigh_edges_by_vertex(graph);
 
-  dump_to_file(graph, "test");
+  //print_graph(graph, std::cout);
+
+  //dump_to_file(graph, "test");
+
+
+  std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+  for (int j = 0; j < 1; ++j) {
+    for (int i = 0; i < 1000; ++i) {
+      random_walk2(graph, i, 0.85);
+    }
+  }
+  std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
+  std::cout << "Took " << dif << " seconds." << std::endl;
+  
+
+  //random_walk(graph, 1, 0.85);
+  //random_walk2(graph, 1, 0.85);
 
   //Graph graph = generate_graph(size);
   //ncomponents(graph);
