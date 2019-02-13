@@ -70,8 +70,8 @@ void random_walk2(const Graph& graph, vertex_id from, double alpha) {
   double* nxt = probs1;
   cur[from] = 1.0;
 
-  unsigned int max_step = 500;
-  double eps = 1E-8;
+  unsigned int max_step = 25;
+  double eps = 1E-5;
 
   for (unsigned int i = 0; i < max_step; ++i) {
     

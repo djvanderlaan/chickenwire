@@ -121,8 +121,8 @@ int main(int argc, char* argv[]) {
     }
   }
   std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-  double dif = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
-  std::cout << "Took " << dif << " seconds." << std::endl;
+  double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+  std::cout << "Took " << dif/1E3 << " seconds." << std::endl;
   
 
   //random_walk(graph, 1, 0.85);
