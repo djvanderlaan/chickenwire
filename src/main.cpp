@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
   std::chrono::high_resolution_clock::time_point t1a = std::chrono::high_resolution_clock::now();
   std::cout << "Generating graph" << std::endl;
   Graph graph(true);
-  random_graph(graph, size, std::min(0.2, 20.0/size));
+  random_graph(graph, size, std::min(0.2, 100.0/size));
   std::chrono::high_resolution_clock::time_point t2a = std::chrono::high_resolution_clock::now();
   double difa = std::chrono::duration_cast<std::chrono::seconds>( t2a - t1a ).count();
   std::cout << "Took " << difa << " seconds." << std::endl;
@@ -115,11 +115,12 @@ int main(int argc, char* argv[]) {
 
 
   std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-  for (int j = 0; j < 1; ++j) {
-    for (int i = 0; i < 1000; ++i) {
-      random_walk2(graph, i, 0.85);
-    }
-  }
+  //for (int j = 0; j < 1; ++j) {
+    //for (int i = 0; i < 1000; ++i) {
+      //random_walk2(graph, i, 0.85);
+    //}
+  //}
+  random_walk_rev(graph, 7, 0.85);
   std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
   double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
   std::cout << "Took " << dif/1E3 << " seconds." << std::endl;

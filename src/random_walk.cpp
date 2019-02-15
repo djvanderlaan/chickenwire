@@ -44,17 +44,15 @@ void random_walk(const Graph& graph, vertex_id from, double alpha) {
     //}
   }
 
-  /*
-  double max = 0.0;
-  double sum = 0.0;
-  for (auto p = weights.cbegin(); p != weights.cend(); ++p) {
-    std::cout << p->first << '\t' << p->second << '\n';
-    if (p->second > max) max = p->second;
-    sum += p->second;
-  }
-  std::cout << "MAX=" << max << "\n";
-  std::cout << "SUM=" << sum << "\n";
-  */
+  //double max = 0.0;
+  //double sum = 0.0;
+  //for (auto p = weights.cbegin(); p != weights.cend(); ++p) {
+    //std::cout << p->first << '\t' << p->second << '\n';
+    //if (p->second > max) max = p->second;
+    //sum += p->second;
+  //}
+  //std::cout << "MAX=" << max << "\n";
+  //std::cout << "SUM=" << sum << "\n";
 }
 
 
@@ -115,6 +113,64 @@ void random_walk2(const Graph& graph, vertex_id from, double alpha) {
   delete [] weights;
   delete [] probs0;
   delete [] probs1;
+}
 
+
+class RWData {
+  public:
+    RWData(double t = 0.0, double p = 0.0) : total(t), prob{p, 0.0} {}
+    double total;
+    double prob[2];
+};
+
+inline double runif() {
+  return (double)std::rand() / (double)RAND_MAX;
+}
+
+void random_walk_rev(const Graph& graph, vertex_id from, double alpha) { 
+  std::unordered_map<vertex_id, RWData> values;
+
+  // Initialise value; currently randomly assign some records a value of 1
+  std::cout << "foo" << std::endl;
+  unsigned int i = 0;
+  for (auto p = graph.vertices().cbegin(); p != graph.vertices().cend(); ++p, ++i) {
+    values[p->first] = RWData(0.0, 1.0);
+    if (i > 100) break;
+  }
+  //values[from] = RWData(0.0, 1.0);
+
+  unsigned int max_step = 100;
+  double eps = 1E-5;
+
+  const VertexList& vertices = graph.vertices();
+
+  int cur = 0;
+  int nxt = 1;
+
+  for (unsigned int step = 0; step < max_step; ++step) {
+
+    bool cont = false;
+    
+    for (auto vert = vertices.cbegin(); vert != vertices.cend(); ++vert) {
+
+      const EdgeList& edges = vert->second.edges_out();
+      RWData& value = values[vert->second.id()];
+      value.prob[nxt] = 0.0;
+
+      for (auto e = edges.cbegin(); e != edges.cend(); ++e) {
+        const double prob = values[e->dst()].prob[cur] * e->weight();
+        if (prob > eps) cont = true;
+        value.prob[nxt] += prob * alpha;
+        value.total += prob * (1-alpha);
+      }
+    }
+    std::swap(nxt, cur);
+
+    if (!cont) break;
+  }
+
+  //for (auto p = values.begin(); p != values.end(); ++p) {
+    //std::cout << p->first << ": " << p->second.total << "\n";
+  //}
 }
 
