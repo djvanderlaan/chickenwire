@@ -39,7 +39,7 @@ double shortest_path(const Graph& graph, vertex_id from, vertex_id to) {
     if (i.vertex == to) return path_lengths[to];
     // Add subvertices of current vertex
     const Vertex& v = graph.vertex(i.vertex);
-    const EdgeList& edges = v.edges_out();
+    const EdgeList& edges = v.edges();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());
       double newl = i.path_length + j->weight();
@@ -75,7 +75,7 @@ double max_shortest_path(const Graph& graph, vertex_id from) {
     if (i.path_length > max) max = i.path_length;
     // Add subvertices of current vertex
     const Vertex& v = graph.vertex(i.vertex);
-    const EdgeList& edges = v.edges_out();
+    const EdgeList& edges = v.edges();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());
       double newl = i.path_length + j->weight();

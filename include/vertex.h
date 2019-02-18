@@ -18,60 +18,38 @@ class Vertex {
     void type(vertex_type type) { type_ = type;}
     vertex_type type() const { return type_;}
 
-    // ==== Edge manipulation
-    void add_out(vertex_id out, edge_weight weight = 1.0, edge_type type = 0) {
-      out_.push_back(Edge(out, weight, type));
+    void add_edge(vertex_id dst, Edge::weight_type weight = 1.0, Edge::type_type type = 0) {
+      edges_.push_back(Edge(dst, weight, type));
     }
 
-    void add_in(vertex_id in, edge_weight weight = 1.0, edge_type type = 0) {
-      in_.push_back(Edge(in, weight, type));
-    }
-
-    void remove_out(vertex_id out) {
-      EdgeList::iterator p = find_edge(out_, out);
-      if (p == out_.end()) 
-        throw std::runtime_error("No out edge to vertex id " + 
-          std::to_string(out) + " from " + std::to_string(id_) + ".");
-      out_.erase(p);
-    }
-
-    void remove_in(vertex_id in) {
-      EdgeList::iterator p = find_edge(in_, in);
-      if (p == in_.end()) 
-        throw std::runtime_error("No in edge to vertex id " + 
-          std::to_string(in) + " from " + std::to_string(id_) + ".");
-      in_.erase(p);
+    void remove_edge(vertex_id dst) {
+      EdgeList::iterator p = find_edge(edges_, dst);
+      if (p == edges_.end()) 
+        throw std::runtime_error("No edge to vertex id " + 
+          std::to_string(dst) + " from " + std::to_string(id_) + ".");
+      edges_.erase(p);
     }
 
     bool connected_to(vertex_id vertex) const {
-      EdgeList::const_iterator p = find_edge(out_, vertex);
-      return p != out_.end();
+      EdgeList::const_iterator p = find_edge(edges_, vertex);
+      return p != edges_.end();
     }
 
-    edge_weight out_edge_weight(vertex_id vertex) const {
-      EdgeList::const_iterator p = find_edge(out_, vertex);
-      return p != out_.end() ? p->weight() : 0.0;
+    Edge::weight_type edge_weight(vertex_id vertex) const {
+      EdgeList::const_iterator p = find_edge(edges_, vertex);
+      return p != edges_.end() ? p->weight() : 0.0;
     }
 
-    edge_weight in_edge_weight(vertex_id vertex) const {
-      EdgeList::const_iterator p = find_edge(out_, vertex);
-      return p != in_.end() ? p->weight() : 0.0;
-    }
+    EdgeCount degree() const { return edges_.size();}
 
-    EdgeCount in_degree() const { return in_.size();}
-    EdgeCount out_degree() const { return out_.size();}
-
-    const EdgeList& edges_out() const { return out_;}
-    const EdgeList& edges_in() const { return in_;}
-
-    EdgeList& edges_out_nonconst() { return out_;}
-    EdgeList& edges_in_nonconst() { return in_;}
+    const EdgeList& edges() const { return edges_;}
+    EdgeList& edges_nonconst() { return edges_;}
 
   private:
     vertex_id id_;
     vertex_type type_;
-    EdgeList in_;
-    EdgeList out_;
+    EdgeList edges_;
 };
 
 #endif
+

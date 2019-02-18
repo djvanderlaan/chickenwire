@@ -48,25 +48,21 @@ class Graph {
       return p->second;
     }
     
-    void add_edge(vertex_id from, vertex_id to, edge_weight weight = 1.0, edge_type type = 0) {
+    void add_edge(vertex_id from, vertex_id to, Edge::weight_type weight = 1.0, Edge::type_type type = 0) {
       Vertex& from_vertex = get_vertex(from);
       Vertex& to_vertex = get_vertex(to);
-      from_vertex.add_out(to, weight, type);
-      to_vertex.add_in(from, weight, type);
+      from_vertex.add_edge(to, weight, type);
       if (!directed()) {
-        from_vertex.add_in(to, weight, type);
-        to_vertex.add_out(from, weight, type);
+        to_vertex.add_edge(from, weight, type);
       }
     }
 
     void remove_edge(vertex_id from, vertex_id to) {
       Vertex& from_vertex = get_vertex(from);
       Vertex& to_vertex = get_vertex(to);
-      from_vertex.remove_out(to);
-      to_vertex.remove_in(from);
+      from_vertex.remove_edge(to);
       if (!directed()) {
-        from_vertex.remove_in(to);
-        to_vertex.remove_out(from);
+        to_vertex.remove_edge(from);
       }
     }
 

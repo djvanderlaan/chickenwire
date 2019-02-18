@@ -31,7 +31,7 @@ Graph& barabasi_albert(Graph& graph, VertexList::size_type size) {
     // Find selected node
     for (VertexList::size_type j = start; j <= i; ++j) {
       const Vertex& v = graph.vertex(j);
-      EdgeCount k = v.in_degree();
+      EdgeCount k = 1; // TODO v.in_degree();
       if (v.connected_to(j)) ++k; // self loops are only counted once
 
       sum += k == 0 ? 1.0 : k;

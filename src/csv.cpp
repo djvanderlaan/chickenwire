@@ -100,8 +100,8 @@ inline void add_edge(Graph& graph, const std::string& src, const std::string& ds
     graph.add_vertex_if_not_exists(src_i);
     graph.add_vertex_if_not_exists(dst_i);
   }
-  edge_weight weight_i = weight.length() == 0 ? 0.0 : std::stof(weight);
-  edge_type type_i = type.length() == 0 ? 0 : std::stoi(type);
+  Edge::weight_type weight_i = weight.length() == 0 ? 0.0 : std::stof(weight);
+  Edge::type_type type_i = type.length() == 0 ? 0 : std::stoi(type);
   graph.add_edge(src_i, dst_i, weight_i, type_i);
 }
 
@@ -223,7 +223,7 @@ void csv_write_vertices_and_edges(const Graph& graph, std::ostream& output_verti
         output_vertices << ',' << p->second.type();
       output_vertices << '\n';
     }
-    const EdgeList& edges = p->second.edges_out();
+    const EdgeList& edges = p->second.edges();
     for (auto q = edges.cbegin(); q != edges.cend(); ++q) {
       if (!graph.directed() && (p->first > q->dst())) continue;
       output_edges << p->first << ',' << q->dst();

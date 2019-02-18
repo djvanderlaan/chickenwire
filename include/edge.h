@@ -2,28 +2,29 @@
 #define edge_h
 
 #include "types.h"
-
 #include <vector>
 
 class Edge {
   public:
-    Edge(vertex_id dst, edge_weight weight = 0.0, edge_type type = 0) : dst_(dst), 
+    typedef edge_type_type type_type;
+    typedef edge_weight_type weight_type;
+
+    Edge(vertex_id dst, weight_type weight = 0.0, type_type type = 0) : dst_(dst), 
       weight_(weight), type_(type) {}
 
     vertex_id dst() const { return dst_;}
     void dst(vertex_id dst) { dst_ = dst;}
 
-    edge_weight weight() const { return weight_;}
-    void weight(edge_weight weight) { weight_ = weight;}
+    weight_type weight() const { return weight_;}
+    void weight(weight_type weight) { weight_ = weight;}
 
-    void type(edge_type type) { type_ = type;}
-    edge_type type() const { return type_;}
-
+    void type(type_type type) { type_ = type;}
+    type_type type() const { return type_;}
 
   private:
     vertex_id dst_;
-    edge_weight weight_;
-    edge_type type_;
+    weight_type weight_;
+    type_type type_;
 };
 
 

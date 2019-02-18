@@ -3,60 +3,57 @@
 
 class edge_is_of_type {
   public:
-    edge_is_of_type(edge_type type): type_(type) {}
+    edge_is_of_type(Edge::type_type type): type_(type) {}
 
     bool operator()(const Edge& edge) {
       return edge.type() == type_;
     }
 
   private:
-    edge_type type_;
+    Edge::type_type type_;
 };
 
-void filter_edges_on_type(Graph& graph, edge_type type) {
+void filter_edges_on_type(Graph& graph, Edge::type_type type) {
   VertexList& vertices = graph.vertices_nonconst();
   for (auto vertexp = vertices.begin(); vertexp != vertices.end(); ++vertexp) {
-    EdgeList& edges_out = vertexp->second.edges_out_nonconst();
-    edges_out.erase(std::remove_if(edges_out.begin(), edges_out.end(), 
-      edge_is_of_type(type)), edges_out.end());
-    EdgeList& edges_in = vertexp->second.edges_in_nonconst();
-    edges_in.erase(std::remove_if(edges_in.begin(), edges_in.end(), 
-      edge_is_of_type(type)), edges_in.end());
+    EdgeList& edges = vertexp->second.edges_nonconst();
+    edges.erase(std::remove_if(edges.begin(), edges.end(), 
+      edge_is_of_type(type)), edges.end());
   }
 }
 
-void reweigh_edges_by_vertex(Graph& graph, edge_weight scale) {
+void reweigh_edges_by_vertex(Graph& graph, Edge::weight_type scale) {
   VertexList& vertices = graph.vertices_nonconst();
   for (auto vertexp = vertices.begin(); vertexp != vertices.end(); ++vertexp) {
-    EdgeList& edges_out = vertexp->second.edges_out_nonconst();
+    EdgeList& edges = vertexp->second.edges_nonconst();
 
     // Calculate sum
     float sum = 0.0;
-    for (auto e = edges_out.begin(); e != edges_out.end(); ++e) {
+    for (auto e = edges.begin(); e != edges.end(); ++e) {
       sum += e->weight();
     }
     if (sum == 0.0) sum = 1.0;
     // Reweigh
-    for (auto e = edges_out.begin(); e != edges_out.end(); ++e) {
+    for (auto e = edges.begin(); e != edges.end(); ++e) {
       e->weight(e->weight()/sum*scale);
     }
     //TODO also update incoming weights????
   }
 }
 
-void reweigh_edges_by_vertex_and_type(Graph& graph, edge_weight scale) {
+void reweigh_edges_by_vertex_and_type(Graph& graph, Edge::weight_type scale) {
   VertexList& vertices = graph.vertices_nonconst();
   for (auto vertexp = vertices.begin(); vertexp != vertices.end(); ++vertexp) {
-    EdgeList& edges_out = vertexp->second.edges_out_nonconst();
+    EdgeList& edges = vertexp->second.edges_nonconst();
 
     // Calculate sum
-    std::unordered_map<edge_type, float> sums;
-    for (auto e = edges_out.begin(); e != edges_out.end(); ++e) {
+    std::unordered_map<Edge::type_type, float> sums;
+    for (auto e = edges.begin(); e != edges.end(); ++e) {
       sums[e->type()] = sums[e->type()] + e->weight();
     }
-    edge_weight ntypes = sums.size();
+    Edge::weight_type ntypes = sums.size();
     // Reweigh
-    for (auto e = edges_out.begin(); e != edges_out.end(); ++e) {
+    for (auto e = edges.begin(); e != edges.end(); ++e) {
       if (sums[e->type()] == 0) sums[e->type()] = 1.0;
       e->weight(e->weight()/sums[e->type()]*scale/ntypes);
     }

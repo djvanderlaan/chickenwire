@@ -25,7 +25,7 @@ void random_walk(const Graph& graph, vertex_id from, double alpha) {
     for (auto vid = current_queue.begin(); vid != current_queue.end(); ++vid) {
       
       const Vertex& vertex = graph.vertex(vid->first);
-      const EdgeList& edges = vertex.edges_out();
+      const EdgeList& edges = vertex.edges();
       double prob = vid->second;
 
       for (auto e = edges.cbegin(); e != edges.cend(); ++e) {
@@ -80,7 +80,7 @@ void random_walk2(const Graph& graph, vertex_id from, double alpha) {
       if (*p < eps) continue;
 
       const Vertex& vertex = graph.vertex(j);
-      const EdgeList& edges = vertex.edges_out();
+      const EdgeList& edges = vertex.edges();
 
       for (auto e = edges.cbegin(); e != edges.cend(); ++e) {
         double prob = (*p) * e->weight();
@@ -153,7 +153,7 @@ void random_walk_rev(const Graph& graph, vertex_id from, double alpha) {
     
     for (auto vert = vertices.cbegin(); vert != vertices.cend(); ++vert) {
 
-      const EdgeList& edges = vert->second.edges_out();
+      const EdgeList& edges = vert->second.edges();
       RWData& value = values[vert->second.id()];
       value.prob[nxt] = 0.0;
 
