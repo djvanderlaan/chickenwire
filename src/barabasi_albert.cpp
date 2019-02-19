@@ -13,7 +13,7 @@ Graph& barabasi_albert(Graph& graph, VertexList::size_type size) {
   unsigned int blocksize = std::max(std::round(std::sqrt((double)size/1E6*2.0)), 1.0) * 1024;
   //unsigned int blocksize = std::max(500.0, 2.0*std::sqrt((double)size));
   std::map<VertexList::size_type, double> blocks;
-  std::unordered_map<vertex_id, EdgeCount> in_degrees;
+  std::unordered_map<VertexID, EdgeCount> in_degrees;
   blocks[0] = 0.0;
 
   for (VertexList::size_type i = 0; i < size; ++i) {

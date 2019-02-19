@@ -33,7 +33,7 @@ CSVHeader csv_read_header(std::istream& input) {
 // ============================================================================
 //
 // A CSV-file with vertices has the following form:
-// vertex_id[,vertex_type]
+// VertexID[,vertex_type]
 //
 Graph& csv_read_vertices(Graph& graph, std::istream& input) {
   std::string id, type;
@@ -51,7 +51,7 @@ Graph& csv_read_vertices(Graph& graph, std::istream& input) {
       } else if (c == '\n' || '\r' || input.eof()) {
         // type is missing add vertex
         if (id.length() == 0) continue;
-        vertex_id id_i = std::stoi(id);
+        VertexID id_i = std::stoi(id);
         graph.add_vertex(Vertex(id_i, 0));
         ++line_number;
         id = "";
@@ -67,8 +67,8 @@ Graph& csv_read_vertices(Graph& graph, std::istream& input) {
         type += c;
       } else if (c == '\n' || '\r' || input.eof()) {
         // finished reading type; add vertex
-        vertex_id id_i = std::stoi(id);
-        vertex_id type_i = std::stoi(type);
+        VertexID id_i = std::stoi(id);
+        VertexID type_i = std::stoi(type);
         graph.add_vertex(Vertex(id_i, type_i));
         ++line_number;
         id = "";
@@ -94,8 +94,8 @@ Graph& csv_read_vertices(Graph& graph, std::istream& input) {
 
 inline void add_edge(Graph& graph, const std::string& src, const std::string& dst, 
     const std::string& weight, const std::string& type, bool add_vertices) {
-  vertex_id src_i = std::stoi(src);
-  vertex_id dst_i = std::stoi(dst);
+  VertexID src_i = std::stoi(src);
+  VertexID dst_i = std::stoi(dst);
   if (add_vertices) {
     graph.add_vertex_if_not_exists(src_i);
     graph.add_vertex_if_not_exists(dst_i);

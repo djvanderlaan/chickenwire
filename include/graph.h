@@ -4,7 +4,7 @@
 #include "vertex.h"
 #include <unordered_map>
 
-typedef std::unordered_map<vertex_id, Vertex> VertexList;
+typedef std::unordered_map<VertexID, Vertex> VertexList;
 typedef VertexList::size_type GraphSize;
 
 class Graph {
@@ -23,7 +23,7 @@ class Graph {
       directed_ = directed;
     }
 
-    void add_vertex(vertex_id id) {
+    void add_vertex(VertexID id) {
       vertices_[id] = Vertex(id);
     }
 
@@ -31,24 +31,24 @@ class Graph {
       vertices_[vertex.id()] = vertex;
     }
 
-    void add_vertex_if_not_exists(vertex_id id) {
+    void add_vertex_if_not_exists(VertexID id) {
       VertexList::const_iterator p = vertices_.find(id);
       if (p == vertices_.end()) vertices_[id] = Vertex(id);
     }
 
-    bool vertex_exists(vertex_id id) const {
+    bool vertex_exists(VertexID id) const {
       VertexList::const_iterator p = vertices_.find(id);
       return p != vertices_.end();
     }
 
-    const Vertex& vertex(vertex_id id) const {
+    const Vertex& vertex(VertexID id) const {
       VertexList::const_iterator p = vertices_.find(id);
       if (p == vertices_.end()) 
         throw std::runtime_error("Invalid vertex id: " + std::to_string(id) + ".");
       return p->second;
     }
     
-    void add_edge(vertex_id from, vertex_id to, EdgeWeight weight = 1.0, EdgeType type = 0) {
+    void add_edge(VertexID from, VertexID to, EdgeWeight weight = 1.0, EdgeType type = 0) {
       Vertex& from_vertex = get_vertex(from);
       Vertex& to_vertex = get_vertex(to);
       from_vertex.add_edge(to, weight, type);
@@ -57,7 +57,7 @@ class Graph {
       }
     }
 
-    void remove_edge(vertex_id from, vertex_id to) {
+    void remove_edge(VertexID from, VertexID to) {
       Vertex& from_vertex = get_vertex(from);
       Vertex& to_vertex = get_vertex(to);
       from_vertex.remove_edge(to);
@@ -71,7 +71,7 @@ class Graph {
 
 
   private:
-    Vertex& get_vertex(vertex_id id) {
+    Vertex& get_vertex(VertexID id) {
       VertexList::iterator p = vertices_.find(id);
       if (p == vertices_.end()) throw std::runtime_error("Invalid vertex id.");
       return p->second;

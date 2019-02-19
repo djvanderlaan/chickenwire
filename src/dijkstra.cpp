@@ -12,7 +12,7 @@
 class QueueEl {
   public: 
     double path_length;
-    vertex_id vertex;
+    VertexID vertex;
 };
 
 bool operator<(const QueueEl& a, const QueueEl& b) {
@@ -24,8 +24,8 @@ bool operator<(const QueueEl& a, const QueueEl& b) {
 // ============================================================================
 
 // Calculate the shortest path between two vertices
-double shortest_path(const Graph& graph, vertex_id from, vertex_id to) {
-  std::unordered_map<vertex_id, double> path_lengths;
+double shortest_path(const Graph& graph, VertexID from, VertexID to) {
+  std::unordered_map<VertexID, double> path_lengths;
   std::priority_queue<QueueEl> queue;
 
   // Insert first node into the queu
@@ -60,8 +60,8 @@ double shortest_path(const Graph& graph, vertex_id from, vertex_id to) {
 
 // Calculate the shortest path between a vertex and all other nodes; determine
 // the maximum value of that.
-double max_shortest_path(const Graph& graph, vertex_id from) {
-  std::unordered_map<vertex_id, double> path_lengths;
+double max_shortest_path(const Graph& graph, VertexID from) {
+  std::unordered_map<VertexID, double> path_lengths;
   std::priority_queue<QueueEl> queue;
 
   // Insert first node into the queu

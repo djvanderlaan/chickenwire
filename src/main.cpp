@@ -46,7 +46,7 @@ unsigned int ncomponents(const Graph& graph) {
   std::cout << "Computing connected components" << std::endl;
   std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
   Components components = connected_components(graph);
-  std::unordered_set<vertex_id> unique_components;
+  std::unordered_set<VertexID> unique_components;
   for (auto p = components.cbegin(); p != components.cend(); ++p) {
     unique_components.insert(p->second);
   }

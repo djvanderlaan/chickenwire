@@ -6,11 +6,11 @@
 
 #include <iostream>
 
-void random_walk(const Graph& graph, vertex_id from, double alpha) {
-  std::unordered_map<vertex_id, double> weights;
+void random_walk(const Graph& graph, VertexID from, double alpha) {
+  std::unordered_map<VertexID, double> weights;
 
   // initialise queues
-  typedef std::map<vertex_id, double> Queue;
+  typedef std::map<VertexID, double> Queue;
   Queue queue0;
   Queue queue1;
   Queue& current_queue = queue0;
@@ -56,7 +56,7 @@ void random_walk(const Graph& graph, vertex_id from, double alpha) {
 }
 
 
-void random_walk2(const Graph& graph, vertex_id from, double alpha) {
+void random_walk2(const Graph& graph, VertexID from, double alpha) {
   unsigned int size = graph.vertices().size();
 
   double* weights = new double[size] ();
@@ -127,8 +127,8 @@ inline double runif() {
   return (double)std::rand() / (double)RAND_MAX;
 }
 
-void random_walk_rev(const Graph& graph, vertex_id from, double alpha) { 
-  std::unordered_map<vertex_id, RWData> values;
+void random_walk_rev(const Graph& graph, VertexID from, double alpha) { 
+  std::unordered_map<VertexID, RWData> values;
 
   // Initialise value; currently randomly assign some records a value of 1
   std::cout << "foo" << std::endl;
