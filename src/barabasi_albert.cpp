@@ -13,6 +13,7 @@ Graph& barabasi_albert(Graph& graph, VertexList::size_type size) {
   unsigned int blocksize = std::max(std::round(std::sqrt((double)size/1E6*2.0)), 1.0) * 1024;
   //unsigned int blocksize = std::max(500.0, 2.0*std::sqrt((double)size));
   std::map<VertexList::size_type, double> blocks;
+  std::unordered_map<vertex_id, EdgeCount> in_degrees;
   blocks[0] = 0.0;
 
   for (VertexList::size_type i = 0; i < size; ++i) {
@@ -31,12 +32,14 @@ Graph& barabasi_albert(Graph& graph, VertexList::size_type size) {
     // Find selected node
     for (VertexList::size_type j = start; j <= i; ++j) {
       const Vertex& v = graph.vertex(j);
-      EdgeCount k = 1; // TODO v.in_degree();
+      EdgeCount k = in_degrees[v.id()];
       if (v.connected_to(j)) ++k; // self loops are only counted once
 
       sum += k == 0 ? 1.0 : k;
       if (sum > s) {
         graph.add_edge(i, j);
+        // Update indegree of j
+        in_degrees[j] = in_degrees[j] + 1;
         // Update blocks
         for (VertexList::size_type k = start; k <= i; k += blocksize) {
           if (k == i) blocks[k] = 2.0 * i;
