@@ -103,22 +103,31 @@ int main(int argc, char* argv[]) {
   }
   std::cout << "\n";
 
-  //Graph graph = read_from_file("example_networks/simple");
+  Graph graph = read_from_file("example_networks/simple");
 
-  Graph graph(true);
-  measure_time([&]() { random_graph(graph, size, std::min(0.2, 100.0/size));}, 
-    "Generating graph");
+  //Graph graph(true);
+  //measure_time([&]() { random_graph(graph, size, std::min(0.2, 100.0/size));}, 
+    //"Generating graph");
 
   //filter_edges_on_type(graph, 2);
   //reweigh_edges_by_vertex_and_type(graph);
-  reweigh_edges_by_vertex(graph);
+  //reweigh_edges_by_vertex(graph);
 
-  //print_graph(graph, std::cout);
+  print_graph(graph, std::cout);
 
   //dump_to_file(graph, "test");
 
+  DegreeDistribution ddist = in_degree_distribution(graph);
+  for (auto p = ddist.begin(); p != ddist.end(); ++p) {
+    std::cout << p->first << ": " << p->second << "\n";
+  }
 
-  measure_time([&](){ random_walk_rev(graph, 7, 0.85); }, "Random Walk");
+  DegreeMatrix mdist = degree_distribution_matrix(graph);
+  for (auto p = mdist.begin(); p != mdist.end(); ++p) {
+    std::cout << p->first.first << ", " << p->first.second << ": " << p->second << "\n";
+  }
+
+  //measure_time([&](){ random_walk_rev(graph, 7, 0.85); }, "Random Walk");
 
   //random_walk(graph, 1, 0.85);
   //random_walk2(graph, 1, 0.85);
