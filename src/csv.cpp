@@ -100,8 +100,8 @@ inline void add_edge(Graph& graph, const std::string& src, const std::string& ds
     graph.add_vertex_if_not_exists(src_i);
     graph.add_vertex_if_not_exists(dst_i);
   }
-  Edge::weight_type weight_i = weight.length() == 0 ? 0.0 : std::stof(weight);
-  Edge::type_type type_i = type.length() == 0 ? 0 : std::stoi(type);
+  EdgeWeight weight_i = weight.length() == 0 ? 0.0 : std::stof(weight);
+  EdgeType type_i = type.length() == 0 ? 0 : std::stoi(type);
   graph.add_edge(src_i, dst_i, weight_i, type_i);
 }
 

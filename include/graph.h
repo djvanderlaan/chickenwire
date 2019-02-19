@@ -48,7 +48,7 @@ class Graph {
       return p->second;
     }
     
-    void add_edge(vertex_id from, vertex_id to, Edge::weight_type weight = 1.0, Edge::type_type type = 0) {
+    void add_edge(vertex_id from, vertex_id to, EdgeWeight weight = 1.0, EdgeType type = 0) {
       Vertex& from_vertex = get_vertex(from);
       Vertex& to_vertex = get_vertex(to);
       from_vertex.add_edge(to, weight, type);

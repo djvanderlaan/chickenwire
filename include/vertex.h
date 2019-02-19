@@ -18,7 +18,7 @@ class Vertex {
     void type(vertex_type type) { type_ = type;}
     vertex_type type() const { return type_;}
 
-    void add_edge(vertex_id dst, Edge::weight_type weight = 1.0, Edge::type_type type = 0) {
+    void add_edge(vertex_id dst, EdgeWeight weight = 1.0, EdgeType type = 0) {
       edges_.push_back(Edge(dst, weight, type));
     }
 
@@ -35,7 +35,7 @@ class Vertex {
       return p != edges_.end();
     }
 
-    Edge::weight_type edge_weight(vertex_id vertex) const {
+    EdgeWeight edge_weight(vertex_id vertex) const {
       EdgeList::const_iterator p = find_edge(edges_, vertex);
       return p != edges_.end() ? p->weight() : 0.0;
     }
