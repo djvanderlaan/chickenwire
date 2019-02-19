@@ -127,6 +127,14 @@ int main(int argc, char* argv[]) {
     std::cout << p->first.first << ", " << p->first.second << ": " << p->second << "\n";
   }
 
+  Components components = connected_components(graph);
+  for (auto p = components.begin(); p != components.end(); ++p) {
+    std::cout << p->first << ": " << p->second << "\n";
+  }
+
+  
+
+
   //measure_time([&](){ random_walk_rev(graph, 7, 0.85); }, "Random Walk");
 
   //random_walk(graph, 1, 0.85);

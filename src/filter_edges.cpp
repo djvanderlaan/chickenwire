@@ -37,7 +37,6 @@ void reweigh_edges_by_vertex(Graph& graph, EdgeWeight scale) {
     for (auto e = edges.begin(); e != edges.end(); ++e) {
       e->weight(e->weight()/sum*scale);
     }
-    //TODO also update incoming weights????
   }
 }
 
@@ -57,7 +56,6 @@ void reweigh_edges_by_vertex_and_type(Graph& graph, EdgeWeight scale) {
       if (sums[e->type()] == 0) sums[e->type()] = 1.0;
       e->weight(e->weight()/sums[e->type()]*scale/ntypes);
     }
-    //TODO also update incoming weights????
   }
 }
 
