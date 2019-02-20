@@ -12,6 +12,10 @@
 #include <cstdlib>
 #include <unordered_set>
 
+inline double runif() {
+  return (double)std::rand() / (double)RAND_MAX;
+}
+
 Graph generate_graph(int size) {
   std::cout << "Generating graph" << std::endl;
   std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
@@ -117,6 +121,7 @@ int main(int argc, char* argv[]) {
 
   //dump_to_file(graph, "test");
 
+  /*
   DegreeDistribution ddist = in_degree_distribution(graph);
   for (auto p = ddist.begin(); p != ddist.end(); ++p) {
     std::cout << p->first << ": " << p->second << "\n";
@@ -131,11 +136,23 @@ int main(int argc, char* argv[]) {
   for (auto p = components.begin(); p != components.end(); ++p) {
     std::cout << p->first << ": " << p->second << "\n";
   }
+  */
+
+  
+  VertexDoubleValues values;
+  for (auto p = graph.vertices().begin(); p != graph.vertices().end(); ++p) {
+    //double value = runif()*10;
+    double value = p->second.type();
+    std::cout << p->first << ": value=" << value << "\n";
+    values[p->first] = value;
+  }
+  random_walk_cont(graph, values);
+
 
   
 
 
-  //measure_time([&](){ random_walk_rev(graph, 7, 0.85); }, "Random Walk");
+  measure_time([&](){ random_walk_rev(graph, 7, 0.85); }, "Random Walk");
 
   //random_walk(graph, 1, 0.85);
   //random_walk2(graph, 1, 0.85);

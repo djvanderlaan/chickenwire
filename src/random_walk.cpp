@@ -134,8 +134,9 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
   std::cout << "foo" << std::endl;
   unsigned int i = 0;
   for (auto p = graph.vertices().cbegin(); p != graph.vertices().cend(); ++p, ++i) {
-    values[p->first] = RWData(0.0, 1.0);
-    if (i > 100) break;
+    //values[p->first] = RWData(0.0, 1.0);
+    values[p->first] = RWData(0.0, p->second.type());
+    //if (i > 100) break;
   }
   //values[from] = RWData(0.0, 1.0);
 
@@ -169,8 +170,8 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
     if (!cont) break;
   }
 
-  //for (auto p = values.begin(); p != values.end(); ++p) {
-    //std::cout << p->first << ": " << p->second.total << "\n";
-  //}
+  for (auto p = values.begin(); p != values.end(); ++p) {
+    std::cout << p->first << ": " << p->second.total << "\n";
+  }
 }
 
