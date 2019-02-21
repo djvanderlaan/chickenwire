@@ -11,6 +11,7 @@
 #include <map>
 #include <cstdlib>
 #include <unordered_set>
+#include <cmath>
 
 inline double runif() {
   return (double)std::rand() / (double)RAND_MAX;
@@ -107,17 +108,17 @@ int main(int argc, char* argv[]) {
   }
   std::cout << "\n";
 
-  Graph graph = read_from_file("example_networks/simple");
+  //Graph graph = read_from_file("example_networks/simple");
 
-  //Graph graph(true);
-  //measure_time([&]() { random_graph(graph, size, std::min(0.2, 100.0/size));}, 
-    //"Generating graph");
+  Graph graph(true);
+  measure_time([&]() { random_graph(graph, size, std::min(0.2, 100.0/size));}, 
+    "Generating graph");
 
   //filter_edges_on_type(graph, 2);
   //reweigh_edges_by_vertex_and_type(graph);
-  //reweigh_edges_by_vertex(graph);
+  reweigh_edges_by_vertex(graph);
 
-  print_graph(graph, std::cout);
+  //print_graph(graph, std::cout);
 
   //dump_to_file(graph, "test");
 
@@ -140,19 +141,18 @@ int main(int argc, char* argv[]) {
 
   
   VertexDoubleValues values;
+  VertexCategoricalValues cvalues;
   for (auto p = graph.vertices().begin(); p != graph.vertices().end(); ++p) {
-    //double value = runif()*10;
-    double value = p->second.type();
-    std::cout << p->first << ": value=" << value << "\n";
+    double value = std::trunc(runif()*2);
+    //double value = p->second.type();
+    //std::cout << p->first << ": value=" << value << "\n";
     values[p->first] = value;
+    cvalues[p->first] = value;
+    //cvalues[p->first] = p->second.type();
   }
-  random_walk_cont2(graph, values);
-
-
-  
-
-
-  measure_time([&](){ random_walk_rev(graph, 7, 0.85); }, "Random Walk");
+  measure_time([&](){random_walk_cont2(graph, values);}, "Random Walk CONT");
+  measure_time([&](){random_walk_cat(graph, cvalues);}, "Random Walk CAT");
+  measure_time([&](){random_walk_rev(graph, 7, 0.85);}, "Random Walk");
 
   //random_walk(graph, 1, 0.85);
   //random_walk2(graph, 1, 0.85);

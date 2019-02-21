@@ -75,7 +75,9 @@ void random_walk_cont2(const Graph& graph, const VertexDoubleValues& vertex_valu
     cont = false;
     for (auto p = values.begin(); p != values.end(); ++p) cont |= p->second.end_update();
   }
-  print_values2(values);
+  //std::cout << "RANDOM_WALK_CONT\n";
+  //print_values2(values);
+  //std::cout << "===========================================================\n";
 }
 
 

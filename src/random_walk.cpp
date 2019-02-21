@@ -131,7 +131,6 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
   std::unordered_map<VertexID, RWData> values;
 
   // Initialise value; currently randomly assign some records a value of 1
-  std::cout << "foo" << std::endl;
   unsigned int i = 0;
   for (auto p = graph.vertices().cbegin(); p != graph.vertices().cend(); ++p, ++i) {
     //values[p->first] = RWData(0.0, 1.0);
@@ -140,7 +139,7 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
   }
   //values[from] = RWData(0.0, 1.0);
 
-  unsigned int max_step = 100;
+  unsigned int max_step = 50;
   double eps = 1E-5;
 
   const VertexList& vertices = graph.vertices();
@@ -167,11 +166,11 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
     }
     std::swap(nxt, cur);
 
-    if (!cont) break;
+    //if (!cont) break;
   }
 
-  for (auto p = values.begin(); p != values.end(); ++p) {
-    std::cout << p->first << ": " << p->second.total << "\n";
-  }
+  //for (auto p = values.begin(); p != values.end(); ++p) {
+    //std::cout << p->first << ": " << p->second.total << "\n";
+  //}
 }
 

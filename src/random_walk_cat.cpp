@@ -4,7 +4,7 @@
 
 class RWDataCat {
   public:
-    RWDataCat(VertexType nvalues, VertexType val)  {
+    RWDataCat(VertexType nvalues = 0, VertexType val = 0)  {
       n = nvalues + 1;
       total_score = new double[n] ();
       score = new double[2*n] ();
@@ -13,10 +13,49 @@ class RWDataCat {
       cur[val] = 1.0;
     }
 
-    ~RWDataCat() {
-      delete [] total_score;
-      delete [] score;
+    RWDataCat(const RWDataCat& data) : n(data.n) {
+      total_score = new double[n] ();
+      score = new double[2*n] ();
+      if (data.cur == data.score) {
+        cur = score;
+        nxt = score + n;
+      } else {
+        cur = score + n;
+        nxt = score;
+      }
+      for (int i = 0; i < n; ++i) {
+        cur[i] = data.cur[i];
+        nxt[i] = data.nxt[i];
+        score[i] = data.score[i];
+      }
     }
+
+    RWDataCat& operator=(const RWDataCat& data) {
+      if (total_score) delete [] total_score;
+      if (score) delete [] score;
+      n = data.n;
+      total_score = new double[n] ();
+      score = new double[2*n] ();
+      if (data.cur == data.score) {
+        cur = score;
+        nxt = score + n;
+      } else {
+        cur = score + n;
+        nxt = score;
+      }
+      for (int i = 0; i < n; ++i) {
+        cur[i] = data.cur[i];
+        nxt[i] = data.nxt[i];
+        score[i] = data.score[i];
+      }
+      return *this;
+    }
+
+    ~RWDataCat() {
+      if (total_score) delete [] total_score;
+      if (score) delete [] score;
+    }
+
 
     void start_update() {
       for (VertexType i = 0; i < n; ++i) nxt[i] = 0.0;
@@ -46,13 +85,13 @@ typedef std::unordered_map<VertexID, RWDataCat> RWDataValuesCat;
 
 
 inline void print_values(const RWDataValuesCat& values) { 
-  //for (auto p = values.begin(); p != values.end(); ++p) {
-    //std::cout << p->first << ": score=" << p->second.total_score << 
-      //"; weight=" << p->second.total_weight << 
-      //"; cur score=[" << p->second.score[0] << "," << p->second.score[1] << "]" <<
-      //"; cur weight=[" << p->second.weight[0] << "," << p->second.score[1] << "]" <<
-      //"\n";
-  //}
+  for (auto p = values.begin(); p != values.end(); ++p) {
+    std::cout << p->first << ": score=";
+    for (VertexType i = 0; i < p->second.n; ++i) {
+      std::cout << i << ": " << p->second.total_score[i] << " ";
+    }
+    std::cout << "\n";
+  }
 }
 
 VertexType get_max_type(const VertexCategoricalValues& values) {
@@ -64,10 +103,10 @@ VertexType get_max_type(const VertexCategoricalValues& values) {
 }
 
 
-void random_walk_cat(const Graph& graph, const VertexDoubleValues& vertex_values, double alpha) { 
-  RWDataValuesCat values;
+void random_walk_cat(const Graph& graph, const VertexCategoricalValues& vertex_values, double alpha) { 
 
   // Initialise values
+  RWDataValuesCat values;
   VertexType nvalues = get_max_type(vertex_values);
   for (auto p = vertex_values.begin(); p != vertex_values.end(); ++p) {
     values[p->first] = RWDataCat(nvalues, p->second);
@@ -92,7 +131,9 @@ void random_walk_cat(const Graph& graph, const VertexDoubleValues& vertex_values
     cont = false;
     for (auto p = values.begin(); p != values.end(); ++p) cont |= p->second.end_update();
   }
-  print_values(values);
+  //std::cout << "RANDOM_WALK_CAT\n";
+  //print_values(values);
+  //std::cout << "===========================================================\n";
 }
 
 
