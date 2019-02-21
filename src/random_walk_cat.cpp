@@ -1,5 +1,4 @@
 #include "random_walk.h"
-#include <unordered_map>
 #include <iostream>
 
 class RWDataCat {
@@ -14,6 +13,8 @@ class RWDataCat {
     }
 
     RWDataCat(const RWDataCat& data) : n(data.n) {
+      if (total_score) delete [] total_score;
+      if (score) delete [] score;
       total_score = new double[n] ();
       score = new double[2*n] ();
       if (data.cur == data.score) {
@@ -31,11 +32,13 @@ class RWDataCat {
     }
 
     RWDataCat& operator=(const RWDataCat& data) {
-      if (total_score) delete [] total_score;
-      if (score) delete [] score;
-      n = data.n;
-      total_score = new double[n] ();
-      score = new double[2*n] ();
+      if (n != data.n) {
+        if (total_score) delete [] total_score;
+        if (score) delete [] score;
+        n = data.n;
+        total_score = new double[n] ();
+        score = new double[2*n] ();
+      }
       if (data.cur == data.score) {
         cur = score;
         nxt = score + n;
@@ -81,18 +84,6 @@ class RWDataCat {
     double* score;
 };
 
-typedef std::unordered_map<VertexID, RWDataCat> RWDataValuesCat;
-
-
-inline void print_values(const RWDataValuesCat& values) { 
-  for (auto p = values.begin(); p != values.end(); ++p) {
-    std::cout << p->first << ": score=";
-    for (VertexType i = 0; i < p->second.n; ++i) {
-      std::cout << i << ": " << p->second.total_score[i] << " ";
-    }
-    std::cout << "\n";
-  }
-}
 
 VertexType get_max_type(const VertexCategoricalValues& values) {
   VertexType max = 0;
@@ -102,15 +93,43 @@ VertexType get_max_type(const VertexCategoricalValues& values) {
   return max;
 }
 
-
-void random_walk_cat(const Graph& graph, const VertexCategoricalValues& vertex_values, double alpha) { 
-
-  // Initialise values
-  RWDataValuesCat values;
+template<typename S>
+std::unordered_map<VertexID, RWDataCat> initialise_rw_data(const Graph& graph, const S& vertex_values) {
   VertexType nvalues = get_max_type(vertex_values);
+  std::unordered_map<VertexID, RWDataCat> values;
   for (auto p = vertex_values.begin(); p != vertex_values.end(); ++p) {
     values[p->first] = RWDataCat(nvalues, p->second);
   }
+  return values;
+}
+
+void random_walk_cat(const Graph& graph, const VertexCategoricalValues& vertex_values, double alpha) { 
+  return random_walk_template<RWDataCat>(graph, vertex_values, alpha);
+}
+
+/*
+//inline void print_values(const RWDataValuesCat& values) { 
+//  for (auto p = values.begin(); p != values.end(); ++p) {
+//    std::cout << p->first << ": score=";
+//    for (VertexType i = 0; i < p->second.n; ++i) {
+//      std::cout << i << ": " << p->second.total_score[i] << " ";
+//    }
+//    std::cout << "\n";
+//  }
+//}
+
+
+typedef std::unordered_map<VertexID, RWDataCat> RWDataValuesCat;
+void random_walk_cat(const Graph& graph, const VertexCategoricalValues& vertex_values, double alpha) { 
+
+  // Initialise values
+  RWDataValuesCat values = initialise_rw_data<RWDataCat>(graph, vertex_values);
+
+  //RWDataValuesCat values;
+  //VertexType nvalues = get_max_type(vertex_values);
+  //for (auto p = vertex_values.begin(); p != vertex_values.end(); ++p) {
+    //values[p->first] = RWDataCat(nvalues, p->second);
+  //}
   // Initialise loop
   unsigned int max_step = 50;
   const VertexList& vertices = graph.vertices();
@@ -138,4 +157,5 @@ void random_walk_cat(const Graph& graph, const VertexCategoricalValues& vertex_v
 
 
 
+*/
 

@@ -1,5 +1,4 @@
 #include "random_walk.h"
-#include <unordered_map>
 #include <iostream>
 
 class RWDataCont2 {
@@ -34,6 +33,13 @@ class RWDataCont2 {
     double weight[2];
 };
 
+void random_walk_cont2(const Graph& graph, const VertexDoubleValues& vertex_values, double alpha) { 
+  return random_walk_template<RWDataCont2>(graph, vertex_values, alpha);
+}
+
+
+
+/*
 typedef std::unordered_map<VertexID, RWDataCont2> RWDataValuesCont2;
 
 
@@ -81,4 +87,4 @@ void random_walk_cont2(const Graph& graph, const VertexDoubleValues& vertex_valu
 }
 
 
-
+*/
