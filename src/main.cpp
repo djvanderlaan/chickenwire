@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
     std::cout << p->first << ": value=" << value << "\n";
     values[p->first] = value;
   }
-  random_walk_cont(graph, values);
+  random_walk_cont2(graph, values);
 
 
   
