@@ -1,6 +1,7 @@
 #include "random_walk.h"
 #include <iostream>
 
+
 class RWDataCat {
   public:
     RWDataCat(VertexType nvalues = 0, VertexType val = 0)  {
@@ -65,8 +66,10 @@ class RWDataCat {
     }
 
     bool end_update() {
+      bool cont = false;
+      for (VertexType i = 0; i < n; ++i) cont |= (nxt[i] > 1E-4);
       std::swap(cur, nxt);
-      return true;
+      return cont;
     }
 
     void update(const RWDataCat& data, double edge_weight, double alpha) {

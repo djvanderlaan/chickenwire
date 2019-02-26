@@ -123,6 +123,7 @@ class RWData {
     double prob[2];
 };
 
+#include <cmath>
 inline double runif() {
   return (double)std::rand() / (double)RAND_MAX;
 }
@@ -133,14 +134,15 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
   // Initialise value; currently randomly assign some records a value of 1
   unsigned int i = 0;
   for (auto p = graph.vertices().cbegin(); p != graph.vertices().cend(); ++p, ++i) {
-    //values[p->first] = RWData(0.0, 1.0);
-    values[p->first] = RWData(0.0, p->second.type());
+    double value = std::trunc(runif()*2);
+    values[p->first] = RWData(0.0, value);
+    //values[p->first] = RWData(0.0, p->second.type());
     //if (i > 100) break;
   }
   //values[from] = RWData(0.0, 1.0);
 
-  unsigned int max_step = 50;
-  double eps = 1E-5;
+  unsigned int max_step = 150;
+  double eps = 1E-4;
 
   const VertexList& vertices = graph.vertices();
 
@@ -159,14 +161,17 @@ void random_walk_rev(const Graph& graph, VertexID from, double alpha) {
 
       for (auto e = edges.cbegin(); e != edges.cend(); ++e) {
         const double prob = values[e->dst()].prob[cur] * e->weight();
-        if (prob > eps) cont = true;
+        //if (prob > eps) cont = true;
         value.prob[nxt] += prob * alpha;
         value.total += prob * (1-alpha);
       }
+      //std::cout << value.prob[nxt] << "\n";
+      if (value.prob[nxt] > eps) cont = true;
     }
     std::swap(nxt, cur);
 
-    //if (!cont) break;
+    if (!cont) std::cout << "Terminating iteration after step " << step << ".\n";
+    if (!cont) break;
   }
 
   //for (auto p = values.begin(); p != values.end(); ++p) {

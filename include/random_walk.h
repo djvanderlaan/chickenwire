@@ -3,6 +3,7 @@
 
 #include "graph.h"
 #include <unordered_map>
+#include <iostream> //TODO
 
 void random_walk(const Graph& graph, VertexID from, double alpha = 0.85);
 void random_walk2(const Graph& graph, VertexID from, double alpha = 0.85);
@@ -32,7 +33,7 @@ void random_walk_template(const Graph& graph, const S& vertex_values, double alp
   // Initialise values
   std::unordered_map<VertexID, T> values = initialise_rw_data<T>(graph, vertex_values);
   // Initialise loop
-  unsigned int max_step = 50;
+  unsigned int max_step = 150;
   const VertexList& vertices = graph.vertices();
   bool cont = true;
   // Start iterating
@@ -50,6 +51,8 @@ void random_walk_template(const Graph& graph, const S& vertex_values, double alp
     // Signal next run and check if we need to stop
     cont = false;
     for (auto p = values.begin(); p != values.end(); ++p) cont |= p->second.end_update();
+    if (!cont) std::cout << "Terminating iteration after step " << step << ".\n";
+    //TODOstd::cout << step << "\n";
   }
 }
 

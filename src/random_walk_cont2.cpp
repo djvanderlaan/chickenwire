@@ -14,7 +14,7 @@ class RWDataCont2 {
 
     bool end_update() {
       cur = !cur;
-      return true;
+      return (weight[cur] > 1E-4);
     }
 
     void update(const RWDataCont2& data, double edge_weight, double alpha) {
