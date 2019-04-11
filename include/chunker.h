@@ -1,3 +1,6 @@
+#ifndef chunker_h
+#define chunker_h
+
 #include <vector>
 #include <iterator>
 
@@ -62,3 +65,4 @@ class Chunker {
     std::vector<size_t> chunk_indices_;
 };
 
+#endif

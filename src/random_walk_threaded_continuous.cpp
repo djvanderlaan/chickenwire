@@ -1,6 +1,7 @@
 #include "stepper.h"
 #include "chunker.h"
 #include "random_walk.h"
+#include <iostream>
 
 class RandomWalkDataCont {
   public:
@@ -40,7 +41,6 @@ class RandomWalkComputationCont {
         d.w_sum  += (1-alpha_) * d.w[cur];
         d.w[cur] *= alpha_;
         d.x[cur] *= alpha_;
-        //if (p->first < 10) std::cout << p->first << ": " << d.x_sum << " w = " << d.w_sum << "\n";
         stop &= std::abs(d.x_sum/d.w_sum - y_prev) < 1E-5;
       }
       return stop;
@@ -53,12 +53,13 @@ class RandomWalkComputationCont {
 };
 
 
-void random_walk_threaded(const Graph& graph, const std::unordered_map<VertexID, double>& vertex_values, 
+void random_walk_threaded_continuous(const Graph& graph, const std::unordered_map<VertexID, double>& vertex_values, 
     double alpha) {
 
-  unsigned int nworkers = 2;
+  unsigned int nworkers = determine_nthreads(graph.vertices().size());
   RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
   Stepper<RandomWalkComputationCont> stepper(computation);
   stepper.run(nworkers, 100);
+  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
 }
 
