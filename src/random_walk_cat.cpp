@@ -107,7 +107,7 @@ std::unordered_map<VertexID, RWDataCat> initialise_rw_data(const Graph& graph, c
 }
 
 void random_walk_cat(const Graph& graph, const VertexCategoricalValues& vertex_values, double alpha) { 
-  return random_walk_template<RWDataCat>(graph, vertex_values, alpha);
+  //return random_walk_template<RWDataCat>(graph, vertex_values, alpha);
 }
 
 /*

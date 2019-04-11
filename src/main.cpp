@@ -150,10 +150,12 @@ int main(int argc, char* argv[]) {
     cvalues[p->first] = value;
     //cvalues[p->first] = p->second.type();
   }
-  measure_time([&](){random_walk_cont2(graph, values);}, "Random Walk CONT");
+  //measure_time([&](){random_walk_cont2(graph, values);}, "Random Walk CONT");
   //measure_time([&](){random_walk_cat(graph, cvalues);}, "Random Walk CAT");
   //measure_time([&](){random_walk_rev(graph, 7, 0.85);}, "Random Walk");
-  measure_time([&](){random_walk_cont_thread(graph, values, 0.85);}, "Random Walk Thread");
+  //measure_time([&](){random_walk_cont_thread(graph, values, 0.85);}, "Random Walk Thread");
+  measure_time([&](){random_walk_threaded(graph, values, 0.85);}, "Random Walk Threaded");
+  measure_time([&](){random_walk_threaded_categorical(graph, cvalues, 0.85);}, "Random Walk Threaded Categorical");
 
   //random_walk(graph, 1, 0.85);
   //random_walk2(graph, 1, 0.85);
