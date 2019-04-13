@@ -26,7 +26,7 @@ class RandomWalkComputationCont {
         const VertexWDoubleValues& values, double alpha) : chunks_(vertices, nworkers),
           alpha_(alpha) {
       for (auto p = values.cbegin(); p != values.cend(); ++p) {
-        data_[p->first] = { p->second.value, 0, p->second.weight, 0, 0, 0};
+        data_[p->first] = { p->second.value*p->second.weight, 0, p->second.weight, 0, 0, 0};
       }
     }
 
