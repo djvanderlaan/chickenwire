@@ -15,12 +15,21 @@ class RandomWalkDataCont {
 class RandomWalkComputationCont {
   public:
     RandomWalkComputationCont(unsigned int nworkers, const VertexList& vertices, 
-        const std::unordered_map<VertexID, double>& values, double alpha) : chunks_(vertices, nworkers),
+        const VertexDoubleValues& values, double alpha) : chunks_(vertices, nworkers),
           alpha_(alpha) {
       for (auto p = values.cbegin(); p != values.cend(); ++p) {
         data_[p->first] = { p->second, 0, 1, 0, 0, 0};
       }
     }
+
+    RandomWalkComputationCont(unsigned int nworkers, const VertexList& vertices, 
+        const VertexWDoubleValues& values, double alpha) : chunks_(vertices, nworkers),
+          alpha_(alpha) {
+      for (auto p = values.cbegin(); p != values.cend(); ++p) {
+        data_[p->first] = { p->second.value, 0, p->second.weight, 0, 0, 0};
+      }
+    }
+
 
     bool operator()(int step, unsigned int id, unsigned int nworkers) {
       const unsigned int prev = (step + 0) % 2;
@@ -53,10 +62,18 @@ class RandomWalkComputationCont {
 };
 
 
-void random_walk_threaded_continuous(const Graph& graph, const std::unordered_map<VertexID, double>& vertex_values, 
-    double alpha) {
+void random_walk_continuous(const Graph& graph, const VertexDoubleValues& vertex_values, 
+    double alpha, unsigned int nworkers) {
+  if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
+  RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
+  Stepper<RandomWalkComputationCont> stepper(computation);
+  stepper.run(nworkers, 100);
+  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+}
 
-  unsigned int nworkers = determine_nthreads(graph.vertices().size());
+void random_walk_continuous(const Graph& graph, const VertexWDoubleValues& vertex_values, 
+    double alpha, unsigned int nworkers) {
+  if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
   RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
   Stepper<RandomWalkComputationCont> stepper(computation);
   stepper.run(nworkers, 100);

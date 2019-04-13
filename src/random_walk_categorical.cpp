@@ -35,6 +35,27 @@ class RandomWalkComputationCat {
       }
     }
 
+    RandomWalkComputationCat(unsigned int nworkers, const VertexList& vertices, 
+        const VertexWCategoricalValues& values, VertexType nvalues, double alpha) : chunks_(vertices, nworkers),
+          nvalues_(nvalues), alpha_(alpha) {
+      // For each vertex we need to store the present and previous values of both weight
+      // and x. x and w consist of nvalues values.
+      size_t n = nvalues * 6UL * vertices.size();
+      store_ = std::unique_ptr<double []>(new double[n]);
+      double* ptr = store_.get();
+      for (size_t i = 0; i < n; ++i, ++ptr) (*ptr) = 0.0;
+      ptr = store_.get();
+      for (auto p = values.cbegin(); p != values.cend(); ++p) {
+        double* w = ptr + (2UL*nvalues);
+        data_[p->first] = {ptr, w, ptr + (4UL*nvalues), ptr + (5UL*nvalues)};
+        ptr[p->second.value] = p->second.weight;
+        for (size_t i = 0; i < nvalues; ++i, ++w) (*w) = p->second.weight;
+        ptr += nvalues * 6UL;
+        *((data_[p->first]).x_sum) = 0.0;
+        *((data_[p->first]).w_sum) = 0.0;
+      }
+    }
+
     bool operator()(int step, unsigned int id, unsigned int nworkers) {
       bool odd = (step % 2) == 1;
       size_t prev = odd ? nvalues_ : 0;
@@ -95,15 +116,34 @@ inline VertexType get_max_type(const VertexCategoricalValues& values) {
   return max;
 }
 
-void random_walk_threaded_categorical(const Graph& graph, const VertexCategoricalValues& vertex_values, 
-    double alpha) {
-
-  unsigned int nworkers = determine_nthreads(graph.vertices().size());
+void random_walk_categorical(const Graph& graph, const VertexCategoricalValues& vertex_values, 
+    double alpha, unsigned int nworkers) {
+  if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
   VertexType nvalues = get_max_type(vertex_values) + 1;
   RandomWalkComputationCat computation(nworkers, graph.vertices(), vertex_values, nvalues, alpha);
   Stepper<RandomWalkComputationCat> stepper(computation);
   stepper.run(nworkers, 100);
   std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
-  //computation.print();
+  computation.print();
+}
+
+
+inline VertexType get_max_type(const VertexWCategoricalValues& values) {
+  VertexType max = 0;
+  for (auto p = values.begin(); p != values.end(); ++p) {
+    if (p->second.value > max) max = p->second.value;
+  }
+  return max;
+}
+
+void random_walk_categorical(const Graph& graph, const VertexWCategoricalValues& vertex_values, 
+    double alpha, unsigned int nworkers) {
+  if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
+  VertexType nvalues = get_max_type(vertex_values) + 1;
+  RandomWalkComputationCat computation(nworkers, graph.vertices(), vertex_values, nvalues, alpha);
+  Stepper<RandomWalkComputationCat> stepper(computation);
+  stepper.run(nworkers, 100);
+  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  computation.print();
 }
 

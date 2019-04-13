@@ -141,21 +141,26 @@ int main(int argc, char* argv[]) {
 
   
   VertexDoubleValues values;
+  VertexWDoubleValues wvalues;
   VertexCategoricalValues cvalues;
+  VertexWCategoricalValues wcvalues;
   for (auto p = graph.vertices().begin(); p != graph.vertices().end(); ++p) {
     double value = std::trunc(runif()*2);
     //double value = p->second.type();
     //std::cout << p->first << ": value=" << value << "\n";
     values[p->first] = value;
     cvalues[p->first] = value;
+    wvalues[p->first] = {value, 2.0};
+    wcvalues[p->first] = {value, 2.0};
     //cvalues[p->first] = p->second.type();
   }
   //measure_time([&](){random_walk_cont2(graph, values);}, "Random Walk CONT");
   //measure_time([&](){random_walk_cat(graph, cvalues);}, "Random Walk CAT");
   //measure_time([&](){random_walk_rev(graph, 7, 0.85);}, "Random Walk");
   //measure_time([&](){random_walk_cont_thread(graph, values, 0.85);}, "Random Walk Thread");
-  measure_time([&](){random_walk_threaded_continuous(graph, values, 0.85);}, "Random Walk Threaded");
-  measure_time([&](){random_walk_threaded_categorical(graph, cvalues, 0.85);}, "Random Walk Threaded Categorical");
+  measure_time([&](){random_walk_continuous(graph, values, 0.85);}, "Random Walk Threaded");
+  measure_time([&](){random_walk_categorical(graph, cvalues, 0.85);}, "Random Walk Threaded Categorical");
+  measure_time([&](){random_walk_categorical(graph, wcvalues, 0.85);}, "Random Walk Threaded Categorical");
 
   //random_walk(graph, 1, 0.85);
   //random_walk2(graph, 1, 0.85);
