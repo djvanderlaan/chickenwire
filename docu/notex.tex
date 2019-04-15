@@ -1,0 +1,42 @@
+\documentclass[a4paper]{article}
+\begin{document}
+
+\begin{tabular}{l p{0.9\textwidth}}
+  $x_i$    & Waarde van doelvariabele voor vertex $i$.\\
+  $e_{ij}$ & Edgegewicht; $\sum_j e_{ij} = 1$. \\
+  $w_i$    & Gewicht van vertex $i$.\\
+  $\alpha$ & Kans om door te stappen naar de volgende set vertices.
+\end{tabular}
+
+\begin{equation}
+  \dot{x}_i^{(0)} = w_i x_i
+\end{equation}
+
+\begin{equation}
+  \dot{w}_i^{(0)} = w_i
+\end{equation}
+
+\begin{equation}
+  \dot{x}_i^{(k)} = \alpha \sum_j e_{ij} \dot{x}_j^{(k-1)} 
+\end{equation}
+
+\begin{equation}
+  \dot{w}_i^{(k)} = \alpha \sum_je_{ij} \dot{w}_j^{(k-1)}
+\end{equation}
+
+\begin{equation}
+  y_i^{(k)} = \frac{
+      \frac{1-\alpha}{\alpha} \sum_{l = 0}^{k} \dot{x}_i^{(l)}
+    }{
+      \frac{1-\alpha}{\alpha} \sum_{l = 0}^{k} \dot{w}_i^{(l)}
+    } = 
+    \frac{
+      \sum_{l = 0}^{k} \dot{x}_i^{(l)}
+    }{
+      \sum_{l = 0}^{k} \dot{w}_i^{(l)}
+    }
+\end{equation}
+
+
+
+\end{document}
