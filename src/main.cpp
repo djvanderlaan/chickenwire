@@ -159,8 +159,27 @@ int main(int argc, char* argv[]) {
   //measure_time([&](){random_walk_rev(graph, 7, 0.85);}, "Random Walk");
   //measure_time([&](){random_walk_cont_thread(graph, values, 0.85);}, "Random Walk Thread");
   measure_time([&](){random_walk_continuous(graph, values, 0.85);}, "Random Walk Threaded");
-  measure_time([&](){random_walk_categorical(graph, cvalues, 0.85);}, "Random Walk Threaded Categorical");
-  measure_time([&](){random_walk_categorical(graph, wcvalues, 0.85);}, "Random Walk Threaded Categorical");
+  measure_time([&](){
+      RandomWalkResult res = random_walk_categorical(graph, wcvalues, 0.85);
+      for (VertexID i = 0; i < 10; ++i) {
+        std::cout << i;
+        for (VertexType j = 0; j < res.nvalues(); ++j) {
+          std::cout << '\t' << res.get(i, j);
+        }
+        std::cout << '\n';
+      }
+    }, "Random Walk Threaded Categorical Weighted");
+
+  measure_time([&](){
+      RandomWalkResult res = random_walk_categorical(graph, cvalues, 0.85);
+      for (VertexID i = 0; i < 10; ++i) {
+        std::cout << i;
+        for (VertexType j = 0; j < res.nvalues(); ++j) {
+          std::cout << '\t' << res.get(i, j);
+        }
+        std::cout << '\n';
+      }
+    }, "Random Walk Threaded Categorical Unweighted");
 
   //random_walk(graph, 1, 0.85);
   //random_walk2(graph, 1, 0.85);
