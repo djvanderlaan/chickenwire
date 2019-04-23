@@ -55,6 +55,18 @@ class RandomWalkComputationCont {
       return stop;
     }
 
+    RandomWalkResult result() const {
+      RandomWalkResult res(data_.size(), 1);
+      for (size_t i = 0; i < chunks_.nchunks(); ++i) {
+        for (auto p = chunks_.begin(i); p != chunks_.end(i); ++p) {
+          const RandomWalkDataCont& d = data_.at(p->first);
+          res.set(p->first, 0, d.x_sum/d.w_sum);
+        }
+      }
+      return res;
+    }
+
+
   private:
     std::unordered_map<VertexID, RandomWalkDataCont> data_;
     Chunker<VertexList> chunks_;
@@ -62,21 +74,23 @@ class RandomWalkComputationCont {
 };
 
 
-void random_walk_continuous(const Graph& graph, const VertexDoubleValues& vertex_values, 
+RandomWalkResult random_walk_continuous(const Graph& graph, const VertexDoubleValues& vertex_values, 
     double alpha, unsigned int nworkers) {
   if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
   RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
   Stepper<RandomWalkComputationCont> stepper(computation);
   stepper.run(nworkers, 100);
   std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  return computation.result();
 }
 
-void random_walk_continuous(const Graph& graph, const VertexWDoubleValues& vertex_values, 
+RandomWalkResult random_walk_continuous(const Graph& graph, const VertexWDoubleValues& vertex_values, 
     double alpha, unsigned int nworkers) {
   if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
   RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
   Stepper<RandomWalkComputationCont> stepper(computation);
   stepper.run(nworkers, 100);
   std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  return computation.result();
 }
 

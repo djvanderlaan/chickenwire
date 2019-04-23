@@ -146,19 +146,32 @@ int main(int argc, char* argv[]) {
   VertexWCategoricalValues wcvalues;
   for (auto p = graph.vertices().begin(); p != graph.vertices().end(); ++p) {
     double value = std::trunc(runif()*2);
-    //double value = p->second.type();
-    //std::cout << p->first << ": value=" << value << "\n";
     values[p->first] = value;
     cvalues[p->first] = value;
     wvalues[p->first] = {value, 2.0};
-    wcvalues[p->first] = {value, 2.0};
-    //cvalues[p->first] = p->second.type();
+    wcvalues[p->first] = {static_cast<VertexType>(value), 2.0};
   }
-  //measure_time([&](){random_walk_cont2(graph, values);}, "Random Walk CONT");
-  //measure_time([&](){random_walk_cat(graph, cvalues);}, "Random Walk CAT");
-  //measure_time([&](){random_walk_rev(graph, 7, 0.85);}, "Random Walk");
-  //measure_time([&](){random_walk_cont_thread(graph, values, 0.85);}, "Random Walk Thread");
-  measure_time([&](){random_walk_continuous(graph, values, 0.85);}, "Random Walk Threaded");
+
+  measure_time([&](){
+      RandomWalkResult res = random_walk_continuous(graph, values, 0.85);
+      for (VertexID i = 0; i < 10; ++i) {
+        std::cout << i;
+        for (VertexType j = 0; j < res.nvalues(); ++j) {
+          std::cout << '\t' << res.get(i, j);
+        }
+        std::cout << '\n';
+      }
+    }, "Random Walk Threaded Continuous Unweighted");
+  measure_time([&](){
+      RandomWalkResult res = random_walk_continuous(graph, wvalues, 0.85);
+      for (VertexID i = 0; i < 10; ++i) {
+        std::cout << i;
+        for (VertexType j = 0; j < res.nvalues(); ++j) {
+          std::cout << '\t' << res.get(i, j);
+        }
+        std::cout << '\n';
+      }
+    }, "Random Walk Threaded Continuous Weighted");
   measure_time([&](){
       RandomWalkResult res = random_walk_categorical(graph, wcvalues, 0.85);
       for (VertexID i = 0; i < 10; ++i) {
@@ -180,13 +193,6 @@ int main(int argc, char* argv[]) {
         std::cout << '\n';
       }
     }, "Random Walk Threaded Categorical Unweighted");
-
-  //random_walk(graph, 1, 0.85);
-  //random_walk2(graph, 1, 0.85);
-
-  //Graph graph = generate_graph(size);
-  //ncomponents(graph);
-  //calc_diameter(graph);
 
   return 0;
 }

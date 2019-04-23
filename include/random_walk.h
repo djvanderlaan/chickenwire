@@ -4,14 +4,14 @@
 #include "graph.h"
 #include <unordered_map>
 
+// ======== INPUT TYPES
+// A number of classes are defined that can be used to pass data to the random walk
+// functions. These functions expect the graph and the values of the vertices.
+
 typedef std::unordered_map<VertexID, double> VertexDoubleValues;
 typedef std::unordered_map<VertexID, VertexType> VertexCategoricalValues;
 
-void random_walk_continuous(const Graph& graph, const VertexDoubleValues& vertex_values, 
-  double alpha = 0.85, unsigned int nworkers = 0);
-
-// === Weighted versions
-
+// Weighted versions; these consist of a value and a weight
 struct WDouble {
    double value;
    double weight;
@@ -25,10 +25,7 @@ struct WCategorical {
 typedef std::unordered_map<VertexID, WDouble> VertexWDoubleValues;
 typedef std::unordered_map<VertexID, WCategorical> VertexWCategoricalValues;
 
-void random_walk_continuous(const Graph& graph, const VertexWDoubleValues& vertex_values, 
-  double alpha = 0.85, unsigned int nworkers = 0);
-
-// ==== Result class
+// ========= RESULT TYPE
 #include <memory>
 #include <cstring>
 
@@ -83,12 +80,8 @@ class RandomWalkResult {
     const double* getp(VertexID id) const {
       return data_.get() + map_.at(id);
     }
-
-
   private:
-
     const RandomWalkResult& operator=(const RandomWalkResult& other) { return *this;};
-
     size_t size_;
     VertexType nvalues_;
     std::unordered_map<VertexID, size_t> map_;
@@ -96,6 +89,13 @@ class RandomWalkResult {
     size_t cur_;
 };
 
+
+// ========== RANDOM WALK FUNCTONS
+
+RandomWalkResult random_walk_continuous(const Graph& graph, const VertexDoubleValues& vertex_values, 
+  double alpha = 0.85, unsigned int nworkers = 0);
+RandomWalkResult random_walk_continuous(const Graph& graph, const VertexWDoubleValues& vertex_values, 
+  double alpha = 0.85, unsigned int nworkers = 0);
 
 RandomWalkResult random_walk_categorical(const Graph& graph, const VertexCategoricalValues& vertex_values, 
   double alpha = 0.85, unsigned int nworkers = 0);
