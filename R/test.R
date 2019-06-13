@@ -11,8 +11,10 @@ edges <- ssi$edges
 
 devtools::load_all()
 data(ssi)
-g <- create_graph(ssi$vertices$id, ssi$edges$src, 
-  ssi$edges$dst)
+g <- create_graph()
+add_edges(g, ssi$edges, ssi$vertices)
+#g <- create_graph(ssi$vertices$id, ssi$edges$src, 
+  #ssi$edges$dst)
 g
 
 rw <- local_average(g, vertices$id, vertex_value = 1*(vertices$color == "pink"))

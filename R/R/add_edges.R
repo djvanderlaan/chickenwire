@@ -1,5 +1,34 @@
 
-#' Add edges
+#' Add edges to graph
+#'
+#' @param graph_id the graph to which to add the edges and vertices. Should
+#'   be of type \code{chickenwire}.
+#' @param edges a data.frame withe edges. Should contain at least two columns:
+#'   source vertex id's of the edge and destination id's. By default it is assumed 
+#'   that these are in the first two columns of the data.frame (see \code{edge_src_col}
+#'   and \code{edge_dst_col}).
+#' @param vertices a data.frame with vertices (optional). By default it is assumed that
+#'   the first column contains the vertex id's (see \code{vertex_id_col}).
+#' @param edge_src_col name or number of the column from \code{edges} containing the source 
+#'   vertex id's of the edges. Column should contain integer values.
+#' @param edge_dst_col name or number of the column from \code{edges} containing the destination 
+#'   vertex id's of the edges. Column should contain integer values.
+#' @param edge_weight_col name or number of the column from \code{edges} containing the weights 
+#'   of the edges. When omitted weights of 1 are assumed. Column should contain 
+#'   numeric values.
+#' @param edge_type_col name or number of the column from \code{edges} containing the types 
+#'   of the edges. When omitted all edges have type 1. Should be of type integer.
+#' @param vertex_id_col name or number of the column from \code{vertices} containing
+#'   the id's of the vertices. Should contain integer values.
+#' @param auto_add_vertices automatically create vertices when an edge contains id's that
+#'   do not exist yet. When \code{vertices} is given this parameter is set to \code{FALSE}.
+#'
+#' @details
+#' Note that the original \code{graph_id} is modified. 
+#'
+#' @return
+#' Modifies \code{graph_id} and returns \code{graph_id}.
+#' 
 #'
 #' @export
 add_edges <- function(graph_id, edges, vertices, edge_src_col = 1, edge_dst_col = 2, 

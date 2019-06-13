@@ -1,5 +1,18 @@
 
-#' Add vertices
+#' Add vertices to graph
+#'
+#' @param graph_id the graph to which to add the edges and vertices. Should
+#'   be of type \code{chickenwire}.
+#' @param vertices a data.frame with vertices (optional). By default it is assumed that
+#'   the first column contains the vertex id's (see \code{vertex_id_col}).
+#' @param vertex_id_col name or number of the column from \code{vertices} containing
+#'   the id's of the vertices. Should contain integer values.
+#'
+#' @details
+#' Note that the original \code{graph_id} is modified. 
+#'
+#' @return
+#' Modifies \code{graph_id} and returns \code{graph_id}.
 #'
 #' @export
 add_vertices <- function(graph_id, vertices, vertex_id_col = 1L) {
