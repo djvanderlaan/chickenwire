@@ -6,5 +6,6 @@
 Graph* get_graph(int id);
 int register_graph(Graph* graph);
 void delete_graph(int id);
+void delete_all_graphs();
 
 #endif

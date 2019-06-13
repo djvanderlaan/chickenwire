@@ -27,3 +27,10 @@ void delete_graph(int id) {
   p->second = 0;
 }
 
+void delete_all_graphs() {
+  for (std::unordered_map<int, Graph*>::iterator p = graphs_.begin(); p != graphs_.end(); ++p) {
+    if (p->second) delete p->second;
+    p->second = 0;
+  }
+}
+

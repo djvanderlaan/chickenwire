@@ -3,7 +3,7 @@
 export(add_edges)
 export(add_vertices)
 export(create_graph)
-export(create_graph_old)
+export(delete_all_graphs)
 export(delete_graph)
 export(local_average)
 importFrom(Rcpp,evalCpp)

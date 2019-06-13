@@ -17,6 +17,10 @@ rcpp_delete_graph <- function(graph_id) {
     invisible(.Call('_chickenwire_rcpp_delete_graph', PACKAGE = 'chickenwire', graph_id))
 }
 
+rcpp_delete_all_graphs <- function() {
+    invisible(.Call('_chickenwire_rcpp_delete_all_graphs', PACKAGE = 'chickenwire'))
+}
+
 rcpp_local_average_cont <- function(graph_id, id, value, vwght) {
     .Call('_chickenwire_rcpp_local_average_cont', PACKAGE = 'chickenwire', graph_id, id, value, vwght)
 }

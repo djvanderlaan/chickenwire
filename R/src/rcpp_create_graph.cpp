@@ -33,3 +33,8 @@ void rcpp_delete_graph(int graph_id) {
   delete_graph(graph_id);
 }
 
+// [[Rcpp::export]]
+void rcpp_delete_all_graphs() {
+  delete_all_graphs();
+}
+

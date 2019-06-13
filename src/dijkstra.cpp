@@ -28,7 +28,7 @@ double shortest_path(const Graph& graph, VertexID from, VertexID to) {
   std::unordered_map<VertexID, double> path_lengths;
   std::priority_queue<QueueEl> queue;
 
-  // Insert first node into the queu
+  // Insert first node into the queue
   path_lengths[from] = 0.0;
   queue.push(QueueEl{0.0, from});
 
@@ -64,7 +64,7 @@ double max_shortest_path(const Graph& graph, VertexID from) {
   std::unordered_map<VertexID, double> path_lengths;
   std::priority_queue<QueueEl> queue;
 
-  // Insert first node into the queu
+  // Insert first node into the queue
   path_lengths[from] = 0.0;
   queue.push(QueueEl{0.0, from});
 
