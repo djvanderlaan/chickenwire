@@ -29,3 +29,7 @@ rcpp_local_average_cat <- function(graph_id, id, value, vwght) {
     .Call('_chickenwire_rcpp_local_average_cat', PACKAGE = 'chickenwire', graph_id, id, value, vwght)
 }
 
+rcpp_graph_size <- function(graph_id) {
+    .Call('_chickenwire_rcpp_graph_size', PACKAGE = 'chickenwire', graph_id)
+}
+

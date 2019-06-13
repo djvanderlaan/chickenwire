@@ -6,9 +6,17 @@
 std::unordered_map<int, Graph*> graphs_;
 int current_counter_ = 0;
 
-Graph* get_graph(int id) {
+Graph* get_graph(int id, bool throw_error) {
   std::unordered_map<int, Graph*>::iterator p = graphs_.find(id);
-  if (p == graphs_.end()) return 0;
+  if (p == graphs_.end()) {
+    if (throw_error) 
+      throw std::runtime_error("Graph does not exist: id = " +
+        std::to_string(id) + ".");
+    return 0;
+  }
+  if (throw_error && !p->second) 
+    throw std::runtime_error("Graph is already deleted: id = " +
+      std::to_string(id) + ".");
   return p->second;
 }
 

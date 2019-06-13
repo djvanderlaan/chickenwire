@@ -26,5 +26,5 @@ print(rw2)
 ig <- graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
 plot(ig, vertex.size = rw2[[1]]*50)
 
-delete_graph(g)
+#delete_graph(g)
 
