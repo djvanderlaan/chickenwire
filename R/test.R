@@ -20,11 +20,12 @@ g
 rw <- local_average(g, vertices$id, vertex_value = 1*(vertices$color == "pink"))
 print(rw)
 
-rw2 <- local_average(g, vertices$id, vertex_value = vertices$color)
-print(rw2)
+#rw2 <- local_average(g, vertices$id, vertex_value = vertices$color)
+#print(rw2)
 
-ig <- graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
-plot(ig, vertex.size = rw2[[1]]*50)
+#ig <- graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
+#plot(ig, vertex.size = rw2[[1]]*50)
 
 #delete_graph(g)
 
+print(g)

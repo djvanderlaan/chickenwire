@@ -2,12 +2,25 @@
 % Please edit documentation in R/local_average.R
 \name{local_average}
 \alias{local_average}
-\title{Random Walk
-Local network averages}
+\title{Local network averages}
 \usage{
 local_average(graph_id, vertex_id, vertex_value, vertex_weight = 1)
 }
+\arguments{
+\item{graph_id}{the graph to which to add the edges and vertices. Should
+be of type \code{chickenwire}.}
+
+\item{vertex_id}{a vector with vertex id's. Should contain integer values.}
+
+\item{vertex_value}{a vector with vertex values. Can be numeric, factor or
+character values. Should have the same length as \code{vertex_id}.}
+
+\item{vertex_weight}{a vector with vertex weights. Should be numeric and 
+have the same length as \code{vertex_id}. Optional.}
+}
+\value{
+A data.frame. This first column contains the vertex id's.
+}
 \description{
-Random Walk
 Local network averages
 }

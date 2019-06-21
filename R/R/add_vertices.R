@@ -17,7 +17,7 @@
 #' @export
 add_vertices <- function(graph_id, vertices, vertex_id_col = 1L) {
   # Check input
-  stopifnot(is(graph_id, "chickenwire"))
+  stopifnot(methods::is(graph_id, "chickenwire"))
   stopifnot(is.integer(graph_id) && length(graph_id) == 1)
   if (!missing(vertices)) {
     if (is.numeric(vertices)) {

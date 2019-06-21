@@ -34,7 +34,7 @@
 add_edges <- function(graph_id, edges, vertices, edge_src_col = 1, edge_dst_col = 2, 
     edge_weight_col, edge_type_col, vertex_id_col = 1, auto_add_vertices = TRUE) {
   # Check input
-  stopifnot(is(graph_id, "chickenwire"))
+  stopifnot(methods::is(graph_id, "chickenwire"))
   stopifnot(is.integer(graph_id) && length(graph_id) == 1)
 
   edge_src <- edges[, edge_src_col]

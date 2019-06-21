@@ -1,7 +1,7 @@
 #include "stepper.h"
 #include "chunker.h"
 #include "random_walk.h"
-#include <iostream>
+//#include <iostream>
 
 class RandomWalkDataCont {
   public:
@@ -80,7 +80,7 @@ RandomWalkResult random_walk_continuous(const Graph& graph, const VertexDoubleVa
   RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
   Stepper<RandomWalkComputationCont> stepper(computation);
   stepper.run(nworkers, 100);
-  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  //std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
   return computation.result();
 }
 
@@ -90,7 +90,7 @@ RandomWalkResult random_walk_continuous(const Graph& graph, const VertexWDoubleV
   RandomWalkComputationCont computation(nworkers, graph.vertices(), vertex_values, alpha);
   Stepper<RandomWalkComputationCont> stepper(computation);
   stepper.run(nworkers, 100);
-  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  //std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
   return computation.result();
 }
 

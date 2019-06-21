@@ -1,7 +1,7 @@
 #include "stepper.h"
 #include "chunker.h"
 #include "random_walk.h"
-#include <iostream>
+//#include <iostream>
 
 
 class RandomWalkComputationCat {
@@ -85,9 +85,9 @@ class RandomWalkComputationCat {
         double* x = store_.getp(i);
         double* x_sum = x + (4UL*nvalues_);
         double* w_sum = x + (5UL*nvalues_);
-        std::cout << i << ": \n";
+        //std::cout << i << ": \n";
         for (VertexType j = 0; j < nvalues_; ++j) {
-          std::cout << "\t\t" << j << " " << x_sum[j] << " w = " << w_sum[j] << "\n";
+          //std::cout << "\t\t" << j << " " << x_sum[j] << " w = " << w_sum[j] << "\n";
         }
       }
     }
@@ -114,7 +114,7 @@ RandomWalkResult random_walk_categorical(const Graph& graph, const VertexCategor
   RandomWalkComputationCat computation(nworkers, graph.vertices(), vertex_values, nvalues, alpha);
   Stepper<RandomWalkComputationCat> stepper(computation);
   stepper.run(nworkers, 100);
-  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  //std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
   return computation.result();
 }
 
@@ -134,7 +134,7 @@ RandomWalkResult random_walk_categorical(const Graph& graph, const VertexWCatego
   RandomWalkComputationCat computation(nworkers, graph.vertices(), vertex_values, nvalues, alpha);
   Stepper<RandomWalkComputationCat> stepper(computation);
   stepper.run(nworkers, 100);
-  std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
+  //std::cout << "Terminating iteration after step " << stepper.step() << ".\n";
   return computation.result();
 }
 
