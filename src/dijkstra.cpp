@@ -23,11 +23,11 @@ bool operator<(const QueueEl& a, const QueueEl& b) {
 }
 
 // ============================================================================
-// === Shortest Path                                                        ===
+// === Shortest Path Length                                                 ===
 // ============================================================================
 
 // Calculate the shortest path between two vertices
-double shortest_path(const Graph& graph, VertexID from, VertexID to) {
+double shortest_path_length(const Graph& graph, VertexID from, VertexID to) {
   std::unordered_map<VertexID, double> path_lengths;
   std::priority_queue<QueueEl> queue;
 
@@ -58,54 +58,87 @@ double shortest_path(const Graph& graph, VertexID from, VertexID to) {
 
 
 // ============================================================================
+// === Shortest Path                                                        ===
+// ============================================================================
+
+// Calculate the shortest path between two vertices
+Path shortest_path(const Graph& graph, VertexID from, VertexID to) {
+  std::unordered_map<VertexID, VertexID> path_edges;
+  std::unordered_map<VertexID, double> path_lengths;
+  std::priority_queue<QueueEl> queue;
+
+  // Insert first node into the queue
+  path_lengths[from] = 0.0;
+  queue.push(QueueEl{0.0, from});
+
+  // Keep popping nodes from the queue and follow out edged of that node
+  while (!queue.empty()) {
+    const QueueEl& i = queue.top();
+    double path_length = i.path_length;
+    VertexID vertex_id = i.vertex;
+    queue.pop();
+    // When we have found our target stop searching
+    if (vertex_id == to) break;
+
+    // Add subvertices of current vertex
+    const Vertex& v = graph.vertex(vertex_id);
+    const EdgeList& edges = v.edges();
+    for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
+      auto f = path_lengths.find(j->dst());
+      double newl = path_length + j->weight();
+      if (f == path_lengths.end() || f->second > newl) {
+        path_edges[j->dst()] = vertex_id;
+        path_lengths[j->dst()] = newl;
+        queue.push(QueueEl{newl, j->dst()});
+      }
+    }
+  }
+
+  // Construct shortest path
+  Path path;
+  if (path_lengths.find(to) != path_lengths.end()) { 
+    VertexID id = to;
+    path.push_back(PathElement{id, path_lengths[id]});
+    while (id != from) {
+      id = path_edges[id];
+      path.push_back(PathElement{id, path_lengths[id]});
+    }
+  } else {
+    path.push_back(PathElement{to, std::numeric_limits<double>::infinity()});
+  }
+  return path;
+}
+
+
+// ============================================================================
 // === All Shortest Paths                                                   ===
 // ============================================================================
 
 // Calculate the shortest path between a vertex and all other nodes
-PathLengths all_shortest_paths(const Graph& graph, VertexID from) {
-  std::cout << "foo" << std::endl;
+PathLengths all_shortest_path_lengths(const Graph& graph, VertexID from) {
   PathLengths path_lengths;
-  std::cout << "foo" << std::endl;
   std::priority_queue<QueueEl> queue;
-  std::cout << "foo" << std::endl;
 
   // Insert first node into the queue
   path_lengths[from] = 0.0;
-  std::cout << "foo" << std::endl;
   queue.push(QueueEl{0.0, from});
-  std::cout << "foo" << std::endl;
 
   // Keep popping nodes from the queue and follow out edged of that node
   while (!queue.empty()) {
-    std::cout << "bar" << std::endl;
     const QueueEl& i = queue.top();
-    std::cout << "bar" << std::endl;
+    double path_length = i.path_length;
     // Add subvertices of current vertex
     const Vertex& v = graph.vertex(i.vertex);
-    std::cout << "bar" << std::endl;
-    const EdgeList& edges = v.edges();
-    std::cout << "bar" << std::endl;
-    for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
-      std::cout << "foobar" << std::endl;
-      auto f = path_lengths.find(j->dst());
-      std::cout << "foobar" << std::endl;
-      //std::cout << i == queue.end() << std::endl;
-      std::cout << i.path_length << std::endl;
-      std::cout << j->weight() << std::endl;
-      double newl = i.path_length + j->weight();
-      std::cout << "foobar" << std::endl;
-      if (f == path_lengths.end() || f->second > newl) {
-      std::cout << "foobar" << std::endl;
-        path_lengths[j->dst()] = newl;
-      std::cout << "foobar" << std::endl;
-        queue.push(QueueEl{newl, j->dst()});
-      std::cout << "foobar" << std::endl;
-      }
-      std::cout << "foobarend" << std::endl;
-    }
-    std::cout << "bar" << std::endl;
     queue.pop();
-    std::cout << "barend" << std::endl;
+    const EdgeList& edges = v.edges();
+    for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
+      auto f = path_lengths.find(j->dst());
+      double newl = path_length + j->weight();
+      if (f == path_lengths.end() || f->second > newl) {
+        path_lengths[j->dst()] = newl;
+        queue.push(QueueEl{newl, j->dst()});
+      }
+    }
   }
   return path_lengths;
 }
@@ -130,19 +163,20 @@ double max_shortest_path(const Graph& graph, VertexID from) {
   double max = 0.0;
   while (!queue.empty()) {
     const QueueEl& i = queue.top();
-    if (i.path_length > max) max = i.path_length;
+    double path_length = i.path_length;
+    if (path_length > max) max = path_length;
     // Add subvertices of current vertex
     const Vertex& v = graph.vertex(i.vertex);
+    queue.pop();
     const EdgeList& edges = v.edges();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());
-      double newl = i.path_length + j->weight();
+      double newl = path_length + j->weight();
       if (f == path_lengths.end() || f->second > newl) {
         path_lengths[j->dst()] = newl;
         queue.push(QueueEl{newl, j->dst()});
       }
     }
-    queue.pop();
   }
   return max;
 }
