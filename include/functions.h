@@ -19,7 +19,10 @@ void write_to_csv(const Graph& graph, const std::string& filename);
 
 // ==== Shortest path
 // Defined in dijkstra.cpp
+typedef std::unordered_map<VertexID, double> PathLengths;
 double shortest_path(const Graph& graph, VertexID from, VertexID to);
+double max_shortest_path(const Graph& graph, VertexID from);
+PathLengths all_shortest_paths(const Graph& graph, VertexID from);
 int diameter(const Graph& graph);
 
 // ==== Connected components

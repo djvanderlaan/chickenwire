@@ -9,6 +9,9 @@
 #include<cmath>
 #include<vector>
 
+#include <iostream>
+#include <iomanip>
+
 class QueueEl {
   public: 
     double path_length;
@@ -52,6 +55,61 @@ double shortest_path(const Graph& graph, VertexID from, VertexID to) {
   }
   return std::numeric_limits<double>::infinity();
 }
+
+
+// ============================================================================
+// === All Shortest Paths                                                   ===
+// ============================================================================
+
+// Calculate the shortest path between a vertex and all other nodes
+PathLengths all_shortest_paths(const Graph& graph, VertexID from) {
+  std::cout << "foo" << std::endl;
+  PathLengths path_lengths;
+  std::cout << "foo" << std::endl;
+  std::priority_queue<QueueEl> queue;
+  std::cout << "foo" << std::endl;
+
+  // Insert first node into the queue
+  path_lengths[from] = 0.0;
+  std::cout << "foo" << std::endl;
+  queue.push(QueueEl{0.0, from});
+  std::cout << "foo" << std::endl;
+
+  // Keep popping nodes from the queue and follow out edged of that node
+  while (!queue.empty()) {
+    std::cout << "bar" << std::endl;
+    const QueueEl& i = queue.top();
+    std::cout << "bar" << std::endl;
+    // Add subvertices of current vertex
+    const Vertex& v = graph.vertex(i.vertex);
+    std::cout << "bar" << std::endl;
+    const EdgeList& edges = v.edges();
+    std::cout << "bar" << std::endl;
+    for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
+      std::cout << "foobar" << std::endl;
+      auto f = path_lengths.find(j->dst());
+      std::cout << "foobar" << std::endl;
+      //std::cout << i == queue.end() << std::endl;
+      std::cout << i.path_length << std::endl;
+      std::cout << j->weight() << std::endl;
+      double newl = i.path_length + j->weight();
+      std::cout << "foobar" << std::endl;
+      if (f == path_lengths.end() || f->second > newl) {
+      std::cout << "foobar" << std::endl;
+        path_lengths[j->dst()] = newl;
+      std::cout << "foobar" << std::endl;
+        queue.push(QueueEl{newl, j->dst()});
+      std::cout << "foobar" << std::endl;
+      }
+      std::cout << "foobarend" << std::endl;
+    }
+    std::cout << "bar" << std::endl;
+    queue.pop();
+    std::cout << "barend" << std::endl;
+  }
+  return path_lengths;
+}
+
 
 
 // ============================================================================

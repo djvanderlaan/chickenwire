@@ -116,7 +116,18 @@ int main(int argc, char* argv[]) {
 
   //filter_edges_on_type(graph, 2);
   //reweigh_edges_by_vertex_and_type(graph);
-  reweigh_edges_by_vertex(graph);
+  //reweigh_edges_by_vertex(graph);
+
+
+  //measure_time([&](){
+  //double m=  max_shortest_path(graph, 0);
+  double m=  diameter(graph);
+  std::cout << m << std::endl;
+  PathLengths path_lengths = all_shortest_paths(graph, 0);
+  //});
+  //for (auto p = path_lengths.begin(), end = path_lengths.end(); p != end; ++p) {
+    //std::cout << p->first << "\t\t" << p->second << "\n";
+  //}
 
   //print_graph(graph, std::cout);
 
@@ -140,6 +151,7 @@ int main(int argc, char* argv[]) {
   */
 
   
+  /*
   VertexDoubleValues values;
   VertexWDoubleValues wvalues;
   VertexCategoricalValues cvalues;
@@ -194,6 +206,7 @@ int main(int argc, char* argv[]) {
       }
     }, "Random Walk Threaded Categorical Unweighted");
 
+  */ 
   return 0;
 }
 
