@@ -1,16 +1,11 @@
-#include "functions.h"
+#include "shortest_path.h"
 
-#include<unordered_map>
 #include<queue>
 #include<limits>
 #include<thread>
 #include<mutex>
 #include<functional>
 #include<cmath>
-#include<vector>
-
-#include <iostream>
-#include <iomanip>
 
 class QueueEl {
   public: 
@@ -38,20 +33,22 @@ double shortest_path_length(const Graph& graph, VertexID from, VertexID to) {
   // Keep popping nodes from the queue and follow out edged of that node
   while (!queue.empty()) {
     const QueueEl& i = queue.top();
+    const double path_length = i.path_length;
+    const VertexID vertex_id = i.vertex;
+    queue.pop();
     // When we have found our target
-    if (i.vertex == to) return path_lengths[to];
+    if (vertex_id == to) return path_lengths[to];
     // Add subvertices of current vertex
-    const Vertex& v = graph.vertex(i.vertex);
+    const Vertex& v = graph.vertex(vertex_id);
     const EdgeList& edges = v.edges();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());
-      double newl = i.path_length + j->weight();
+      double newl = path_length + j->weight();
       if (f == path_lengths.end() || f->second > newl) {
         path_lengths[j->dst()] = newl;
         queue.push(QueueEl{newl, j->dst()});
       }
     }
-    queue.pop();
   }
   return std::numeric_limits<double>::infinity();
 }
@@ -74,8 +71,8 @@ Path shortest_path(const Graph& graph, VertexID from, VertexID to) {
   // Keep popping nodes from the queue and follow out edged of that node
   while (!queue.empty()) {
     const QueueEl& i = queue.top();
-    double path_length = i.path_length;
-    VertexID vertex_id = i.vertex;
+    const double path_length = i.path_length;
+    const VertexID vertex_id = i.vertex;
     queue.pop();
     // When we have found our target stop searching
     if (vertex_id == to) break;
@@ -126,10 +123,11 @@ PathLengths all_shortest_path_lengths(const Graph& graph, VertexID from) {
   // Keep popping nodes from the queue and follow out edged of that node
   while (!queue.empty()) {
     const QueueEl& i = queue.top();
-    double path_length = i.path_length;
-    // Add subvertices of current vertex
-    const Vertex& v = graph.vertex(i.vertex);
+    const double path_length = i.path_length;
+    const VertexID vertex_id = i.vertex;
     queue.pop();
+    // Add subvertices of current vertex
+    const Vertex& v = graph.vertex(vertex_id);
     const EdgeList& edges = v.edges();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());
@@ -163,11 +161,12 @@ double max_shortest_path(const Graph& graph, VertexID from) {
   double max = 0.0;
   while (!queue.empty()) {
     const QueueEl& i = queue.top();
-    double path_length = i.path_length;
+    const double path_length = i.path_length;
+    const VertexID vertex_id = i.vertex;
+    queue.pop();
     if (path_length > max) max = path_length;
     // Add subvertices of current vertex
-    const Vertex& v = graph.vertex(i.vertex);
-    queue.pop();
+    const Vertex& v = graph.vertex(vertex_id);
     const EdgeList& edges = v.edges();
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());

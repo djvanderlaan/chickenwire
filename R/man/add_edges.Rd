@@ -63,5 +63,4 @@ g <- add_edges(g, data.frame(src = c(1,1,2,2,3), dst = c(2,3,1,3,1)),
 print(g)
 delete_graph(g)
 
-
 }

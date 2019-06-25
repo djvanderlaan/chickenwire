@@ -25,3 +25,12 @@ Add vertices to graph
 \details{
 Note that the original \code{graph_id} is modified.
 }
+\examples{
+# Create a graph with 4 vertices without edges
+g <- create_graph()
+g <- add_vertices(g, data.frame(id = c(1,2,3,4)))
+print(g)
+delete_graph(g)
+
+
+}

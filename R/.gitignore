@@ -12,6 +12,7 @@ src/rcpp_graph_store.h
 src/stepper.h
 src/types.h
 src/vertex.h
+src/shortest_path.h
 src/RcppExports.cpp
 src/filter_edges.cpp
 src/random_walk_categorical.cpp
