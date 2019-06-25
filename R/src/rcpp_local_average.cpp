@@ -1,7 +1,7 @@
 
 #include "rcpp_graph_store.h"
 #include "graph.h"
-#include "functions.h"
+#include "random_walk.h"
 #include "filter_edges.h"
 #include "random_walk.h"
 

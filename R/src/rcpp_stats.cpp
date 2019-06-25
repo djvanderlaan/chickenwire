@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "graph.h"
 #include "rcpp_graph_store.h"
 
 #include <Rcpp.h>

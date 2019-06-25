@@ -80,17 +80,17 @@ class RandomWalkComputationCat {
       return res;
     }
 
-    void print() {
-      for (VertexID i = 0; i < 10; ++i) {
-        double* x = store_.getp(i);
-        double* x_sum = x + (4UL*nvalues_);
-        double* w_sum = x + (5UL*nvalues_);
-        //std::cout << i << ": \n";
-        for (VertexType j = 0; j < nvalues_; ++j) {
-          //std::cout << "\t\t" << j << " " << x_sum[j] << " w = " << w_sum[j] << "\n";
-        }
-      }
-    }
+    //void print() {
+    //  for (VertexID i = 0; i < 10; ++i) {
+    //    double* x = store_.getp(i);
+    //    double* x_sum = x + (4UL*nvalues_);
+    //    double* w_sum = x + (5UL*nvalues_);
+    //    std::cout << i << ": \n";
+    //    for (VertexType j = 0; j < nvalues_; ++j) {
+    //      std::cout << "\t\t" << j << " " << x_sum[j] << " w = " << w_sum[j] << "\n";
+    //    }
+    //  }
+    //}
 
   private:
     Chunker<VertexList> chunks_;
