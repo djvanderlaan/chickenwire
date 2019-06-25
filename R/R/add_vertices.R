@@ -14,6 +14,14 @@
 #' @return
 #' Modifies \code{graph_id} and returns \code{graph_id}.
 #'
+#' @examples
+#' # Create a graph with 4 vertices without edges
+#' g <- create_graph()
+#' g <- add_vertices(g, data.frame(id = c(1,2,3,4)))
+#' print(g)
+#' delete_graph(g)
+#'
+#'
 #' @export
 add_vertices <- function(graph_id, vertices, vertex_id_col = 1L) {
   # Check input

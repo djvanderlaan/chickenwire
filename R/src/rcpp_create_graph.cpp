@@ -5,8 +5,8 @@
 #include <iomanip>
 
 // [[Rcpp::export]]
-int rcpp_create_graph() {
-  Graph* graph = new Graph(true);
+int rcpp_create_graph(bool directed) {
+  Graph* graph = new Graph(directed);
   return register_graph(graph);
 }
 
@@ -24,6 +24,10 @@ void rcpp_add_edges(int graph_id, Rcpp::IntegerVector src, Rcpp::IntegerVector d
   for (R_xlen_t i = 0, j = 0, k = 0, end = src.size(); i != end; ++i, ++j, ++k) {
     if (j >= wght.size()) j = 0;
     if (k >= type.size()) k = 0;
+    if (auto_add_vertex) {
+      graph->add_vertex_if_not_exists(src[i]);
+      graph->add_vertex_if_not_exists(dst[i]);
+    }
     graph->add_edge(src[i], dst[i], wght[j], type[k]);
   }
 }

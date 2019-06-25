@@ -28,7 +28,21 @@
 #'
 #' @return
 #' Modifies \code{graph_id} and returns \code{graph_id}.
-#' 
+#'
+#' @examples
+#' # Create graph with three vertices and 5 edges between them.
+#' g <- create_graph()
+#' g <- add_edges(g, data.frame(src = c(1,1,2,2,3), dst = c(2,3,1,3,1)))
+#' print(g)
+#' delete_graph(g)
+#'
+#' # Create graph with four vertices and 5 edges between them; one of the
+#' # vertices does not have edges.
+#' g <- create_graph()
+#' g <- add_edges(g, data.frame(src = c(1,1,2,2,3), dst = c(2,3,1,3,1)),
+#'   vertices = data.frame(id = c(1,2,3,4)))
+#' print(g)
+#' delete_graph(g)
 #'
 #' @export
 add_edges <- function(graph_id, edges, vertices, edge_src_col = 1, edge_dst_col = 2, 

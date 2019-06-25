@@ -4,7 +4,7 @@
 \alias{create_graph}
 \title{Create empty graph}
 \usage{
-create_graph()
+create_graph(directed = TRUE)
 }
 \value{
 An object of type \code{chickenwire} which is a graph. In this case an empty
