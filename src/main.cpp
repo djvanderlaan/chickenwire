@@ -119,15 +119,11 @@ int main(int argc, char* argv[]) {
   //reweigh_edges_by_vertex(graph);
 
 
-  //measure_time([&](){
-  //double m=  max_shortest_path(graph, 0);
-  double m=  diameter(graph);
-  std::cout << m << std::endl;
-  PathLengths path_lengths = all_shortest_paths(graph, 0);
-  //});
-  //for (auto p = path_lengths.begin(), end = path_lengths.end(); p != end; ++p) {
-    //std::cout << p->first << "\t\t" << p->second << "\n";
-  //}
+  Path path = shortest_path(graph, 1, 1000);
+  for (auto p = path.begin(), end = path.end(); p != end; ++p) {
+    std::cout << p->vertex_id << "(" << p->path_length << ") <- " ;
+  }
+  std::cout << "\n";
 
   //print_graph(graph, std::cout);
 
