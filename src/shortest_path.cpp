@@ -106,6 +106,54 @@ Path shortest_path(const Graph& graph, VertexID from, VertexID to) {
   return path;
 }
 
+// ============================================================================
+// === All Shortest Paths                                                   ===
+// ============================================================================
+
+// Calculate the shortest path between a vertex and all other nodes
+Graph all_shortest_paths(const Graph& graph, VertexID from) {
+  PathLengths path_lengths;
+  std::unordered_map<VertexID, VertexID> path_edges;
+  std::priority_queue<QueueEl> queue;
+
+  // Insert first node into the queue
+  path_lengths[from] = 0.0;
+  queue.push(QueueEl{0.0, from});
+
+  // Keep popping nodes from the queue and follow out edged of that node
+  while (!queue.empty()) {
+    const QueueEl& i = queue.top();
+    const double path_length = i.path_length;
+    const VertexID vertex_id = i.vertex;
+    queue.pop();
+    // Add subvertices of current vertex
+    const Vertex& v = graph.vertex(vertex_id);
+    const EdgeList& edges = v.edges();
+    for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
+      auto f = path_lengths.find(j->dst());
+      double newl = path_length + j->weight();
+      if (f == path_lengths.end() || f->second > newl) {
+        path_edges[j->dst()] = vertex_id;
+        path_lengths[j->dst()] = newl;
+        queue.push(QueueEl{newl, j->dst()});
+      }
+    }
+  }
+
+  // Construct graph with all paths
+  Graph tree(true);
+  // Start by adding all vertices [TODO] Do we want that; or only store those
+  // vertices that have a path to `from`?
+  // Add edges
+  for (auto p = path_edges.cbegin(), end = path_edges.cend(); p != end; ++p) {
+    tree.add_vertex_if_not_exists(p->first);
+    tree.add_vertex_if_not_exists(p->second);
+    tree.add_edge(p->first, p->second, path_lengths[p->first]);
+  }
+  return tree;;
+}
+
+
 
 // ============================================================================
 // === All Shortest Paths                                                   ===

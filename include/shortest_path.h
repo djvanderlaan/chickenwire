@@ -20,6 +20,9 @@ Path shortest_path(const Graph& graph, VertexID from, VertexID to);
 typedef std::unordered_map<VertexID, double> PathLengths;
 PathLengths all_shortest_path_lengths(const Graph& graph, VertexID from);
 
+// Get all shortest paths from a node
+Graph all_shortest_paths(const Graph& graph, VertexID from);
+
 // Diameter of the graph: maximum shortest path
 int diameter(const Graph& graph);
 
