@@ -21,6 +21,10 @@ rcpp_delete_all_graphs <- function() {
     invisible(.Call('_chickenwire_rcpp_delete_all_graphs', PACKAGE = 'chickenwire'))
 }
 
+rcpp_edges <- function(graph_id) {
+    .Call('_chickenwire_rcpp_edges', PACKAGE = 'chickenwire', graph_id)
+}
+
 rcpp_local_average_cont <- function(graph_id, id, value, vwght) {
     .Call('_chickenwire_rcpp_local_average_cont', PACKAGE = 'chickenwire', graph_id, id, value, vwght)
 }
@@ -35,5 +39,9 @@ rcpp_graph_size <- function(graph_id) {
 
 rcpp_is_directed <- function(graph_id) {
     .Call('_chickenwire_rcpp_is_directed', PACKAGE = 'chickenwire', graph_id)
+}
+
+rcpp_vertices <- function(graph_id) {
+    .Call('_chickenwire_rcpp_vertices', PACKAGE = 'chickenwire', graph_id)
 }
 

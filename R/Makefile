@@ -7,5 +7,6 @@ copy_lib: $(addprefix src/, $(chickenwire_headers)) $(addprefix, src/$(chickenwi
 	cp $(addprefix ../include/, $(chickenwire_headers)) src/
 	cp $(addprefix ../src/, $(chickenwire_source)) src/
 
+
 document:
 	Rscript  -e "roxygen2::roxygenise()"
