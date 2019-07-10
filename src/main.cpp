@@ -98,6 +98,10 @@ void measure_time(T fun, const std::string& message = "Starting time measurement
   std::cout << "Took " << dif/1000.0 << " seconds." << std::endl;
 }
 
+inline unsigned int sample(unsigned int max) {
+  return std::rand() % max;
+}
+
 
 
 int main(int argc, char* argv[]) {
@@ -111,19 +115,38 @@ int main(int argc, char* argv[]) {
   //Graph graph = read_from_file("example_networks/simple");
 
   Graph graph(true);
-  measure_time([&]() { random_graph(graph, size, std::min(0.2, 100.0/size));}, 
-    "Generating graph");
+  //measure_time([&]() { random_graph(graph, size, std::min(0.2, 100.0/size));}, 
+    //"Generating graph");
+
+  const unsigned int nedge = 10;
+  for (int i = 0; i < size; ++i) {
+    graph.add_vertex(i);
+  }
+  for (int i = 0; i < size; ++i) {
+    for (unsigned int j = 0; j < nedge; ++j) {
+      graph.add_edge(i, sample(size));
+    }
+  }
+  VertexDoubleValues values(size);
+  double sum = 0.0;
+  for (int i = 0; i < size; ++i) { 
+    values[i] = ((double)std::rand() / RAND_MAX) > 0.1 ? 0 : 1;
+    sum += values[i];
+  }
+  measure_time([&](){
+      RandomWalkResult res = random_walk_continuous(graph, values, 0.85, 2);
+    }, "Random Walk Threaded Continuous Weighted");
 
   //filter_edges_on_type(graph, 2);
   //reweigh_edges_by_vertex_and_type(graph);
   //reweigh_edges_by_vertex(graph);
 
 
-  Path path = shortest_path(graph, 1, 1000);
-  for (auto p = path.begin(), end = path.end(); p != end; ++p) {
-    std::cout << p->vertex_id << "(" << p->path_length << ") <- " ;
-  }
-  std::cout << "\n";
+  //Path path = shortest_path(graph, 1, 1000);
+  //for (auto p = path.begin(), end = path.end(); p != end; ++p) {
+    //std::cout << p->vertex_id << "(" << p->path_length << ") <- " ;
+  //}
+  //std::cout << "\n";
 
   //print_graph(graph, std::cout);
 
