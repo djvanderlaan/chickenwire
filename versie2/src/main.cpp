@@ -209,18 +209,46 @@ int main(int argc, char* argv[]) {
     dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
     std::cout << "Parallel computation took " << dif/1000.0 << " seconds." << std::endl;
 
-    VertexDoubleValues values(size);
-    double sum = 0.0;
-    for (unsigned int i = 0; i < size; ++i) { 
-      values[i] = ((double)std::rand() / RAND_MAX) > 0.1 ? 0 : 1;
-      sum += values[i];
+    {
+      VertexDoubleValues values(size);
+      double sum = 0.0;
+      for (unsigned int i = 0; i < size; ++i) { 
+        const double r = ((double)std::rand() / RAND_MAX);
+        values[i] = r >  0.1 ? 0 : 1;
+      }
+      std::cout << "MEAN=" << sum/size << "\n";
+      t1 = std::chrono::high_resolution_clock::now();
+      VertexDoubleValues rw = random_walk_continuous(graph, values, 0.85, 2);
+      t2 = std::chrono::high_resolution_clock::now();
+      dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
     }
-    std::cout << "MEAN=" << sum/size << "\n";
-    t1 = std::chrono::high_resolution_clock::now();
-    VertexDoubleValues rw = random_walk_continuous(graph, values, 0.85, 2);
-    t2 = std::chrono::high_resolution_clock::now();
-    dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-    std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
+    
+    {
+      VertexCategoricalValues values(size);
+      double sum = 0.0;
+      for (unsigned int i = 0; i < size; ++i) { 
+        const double r = ((double)std::rand() / RAND_MAX);
+        values[i] = r > 0.1 ? 0 : 1;
+        if (r > 0.85) values[i] = 2;
+        sum += values[i];
+      }
+      std::cout << "MEAN=" << sum/size << "\n";
+      t1 = std::chrono::high_resolution_clock::now();
+      RandomWalkResult rw = random_walk_categorical(graph, values, 0.85, 2);
+      std::cout << rw.size() << "\n";
+      for (size_t i = 0; i < rw[0].size(); ++i) {
+        std::cout << i;
+        for (size_t col = 0; col < rw.size(); ++col) {
+          std::cout << "\t" << rw[col][i] ;
+        }
+        std::cout << "\n";
+        if (i > 10) break;
+      }
+      t2 = std::chrono::high_resolution_clock::now();
+      dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
+    }
     //for (unsigned int i = 0; i < 100; ++i) {
       //std::cout << i << "\t\t" << values[i] << "\t\t" << rw[i] << "\n";
     //}

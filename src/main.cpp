@@ -127,15 +127,34 @@ int main(int argc, char* argv[]) {
       graph.add_edge(i, sample(size));
     }
   }
-  VertexDoubleValues values(size);
-  double sum = 0.0;
-  for (int i = 0; i < size; ++i) { 
-    values[i] = ((double)std::rand() / RAND_MAX) > 0.1 ? 0 : 1;
-    sum += values[i];
+
+
+  // TEST RANDOM WALK
+  {
+    VertexDoubleValues values(size);
+    double sum = 0.0;
+    for (int i = 0; i < size; ++i) { 
+      values[i] = ((double)std::rand() / RAND_MAX) > 0.1 ? 0 : 1;
+      sum += values[i];
+    }
+    measure_time([&](){
+        RandomWalkResult res = random_walk_continuous(graph, values, 0.85, 2);
+      }, "Random Walk Continuous");
   }
-  measure_time([&](){
-      RandomWalkResult res = random_walk_continuous(graph, values, 0.85, 2);
-    }, "Random Walk Threaded Continuous Weighted");
+
+
+  {
+    VertexCategoricalValues values(size);
+    for (unsigned int i = 0; i < size; ++i) { 
+      const double r = ((double)std::rand() / RAND_MAX);
+      values[i] = r > 0.1 ? 0 : 1;
+      if (r > 0.85) values[i] = 2;
+    }
+    measure_time([&](){
+        RandomWalkResult res = random_walk_categorical(graph, values, 0.85, 2);
+      }, "Random Walk Categorical");
+  }
+
 
   //filter_edges_on_type(graph, 2);
   //reweigh_edges_by_vertex_and_type(graph);
