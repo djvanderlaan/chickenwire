@@ -9,8 +9,7 @@
 typedef std::vector<double> VertexDoubleValues;
 typedef std::vector<VertexType> VertexCategoricalValues;
 typedef std::vector<double> VertexWeights;
-
-typedef std::vector<std::vector<double>> RandomWalkResult;
+typedef std::vector<VertexDoubleValues> RandomWalkResult;
 
 // ========== RANDOM WALK FUNCTONS
 
@@ -22,7 +21,12 @@ VertexDoubleValues random_walk_continuous(const Graph& graph, const VertexDouble
   unsigned int nstep_max = 100);
 
 RandomWalkResult random_walk_categorical(const Graph& graph, 
-  const VertexCategoricalValues& vertex_values, double alpha = 0.85, 
-  unsigned int nworkers = 0, unsigned int nstep_max = 100);
+  const VertexCategoricalValues& vertex_values, 
+  double alpha = 0.85, unsigned int nworkers = 0, unsigned int nstep_max = 100);
+
+RandomWalkResult random_walk_categorical(const Graph& graph, 
+  const VertexCategoricalValues& vertex_values, 
+  const VertexWeights& vertex_weights, 
+  double alpha = 0.85, unsigned int nworkers = 0, unsigned int nstep_max = 100);
 
 #endif

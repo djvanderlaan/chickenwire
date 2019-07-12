@@ -211,10 +211,13 @@ int main(int argc, char* argv[]) {
 
     {
       VertexDoubleValues values(size);
+      VertexWeights weights(size);
       double sum = 0.0;
       for (unsigned int i = 0; i < size; ++i) { 
         const double r = ((double)std::rand() / RAND_MAX);
         values[i] = r >  0.1 ? 0 : 1;
+        weights[i] = 2.0;
+        sum += values[i];
       }
       std::cout << "MEAN=" << sum/size << "\n";
       t1 = std::chrono::high_resolution_clock::now();
@@ -222,14 +225,20 @@ int main(int argc, char* argv[]) {
       t2 = std::chrono::high_resolution_clock::now();
       dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
+      for (size_t i = 0; i < size; ++i) {
+        std::cout << i << "\t\t" << rw[i] << "\n";
+        if (i > 10) break;
+      }
     }
     
     {
       VertexCategoricalValues values(size);
+      VertexWeights weights(size);
       double sum = 0.0;
       for (unsigned int i = 0; i < size; ++i) { 
         const double r = ((double)std::rand() / RAND_MAX);
         values[i] = r > 0.1 ? 0 : 1;
+        weights[i] = 2.0;
         if (r > 0.85) values[i] = 2;
         sum += values[i];
       }
@@ -249,9 +258,6 @@ int main(int argc, char* argv[]) {
       dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
     }
-    //for (unsigned int i = 0; i < 100; ++i) {
-      //std::cout << i << "\t\t" << values[i] << "\t\t" << rw[i] << "\n";
-    //}
   } 
 
   if (versie == 2) {

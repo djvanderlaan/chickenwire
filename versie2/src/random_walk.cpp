@@ -16,6 +16,10 @@ class RandomWalkContinuousComputation {
           vertices_(vertices), chunks_(vertices, nworkers), alpha_(alpha), 
           xsum_(vertices.size(), 0.0), x1_(values), x2_(vertices.size()), 
           wsum_(vertices.size(), 0.0), w1_(weights), w2_(vertices.size()) {
+      // x1 needs to be values * weights
+      for (auto p = x1_.begin(), q = w1_.begin(), end = x1_.end(); p != end; ++p, ++q) {
+        (*p) = (*p) * (*q);
+      }
     }
 
     bool operator()(int step, unsigned int id, unsigned int nworkers) {
@@ -81,5 +85,48 @@ VertexDoubleValues random_walk_continuous(const Graph& graph,
   Stepper<RandomWalkContinuousComputation> stepper(computation);
   stepper.run(nworkers, nstep_max);
   return computation.result();
+}
+
+// There used to be a seperate implementation for categorical values. However, 
+// the performance of that algorithm was practically the same as using the
+// the algorithm for continuous variables for each category seperately. As,
+// maintaining one version of the algorithm is easier it was decided to drop
+// that version. It should be somewhere in the git archives. 
+
+inline VertexType ncategorical_values(const VertexCategoricalValues& values) {
+  return *(std::max_element(values.cbegin(), values.cend()));
+}
+
+
+RandomWalkResult random_walk_categorical(const Graph& graph, 
+    const VertexCategoricalValues& vertex_values, 
+    double alpha, unsigned int nworkers, unsigned int nstep_max) {
+  const VertexType nvalues = ncategorical_values(vertex_values);
+  RandomWalkResult res;
+  VertexDoubleValues values(vertex_values.size());
+  for (VertexType type = 0; type <= nvalues; ++type) {
+    for (size_t i = 0; i < values.size(); ++i) {
+      values[i] = vertex_values[i] == type ? 1 : 0;
+    }
+    res.push_back(random_walk_continuous(graph, values, alpha, 
+      nworkers, nstep_max));
+  }
+  return res;
+}
+
+RandomWalkResult random_walk_categorical(const Graph& graph, 
+    const VertexCategoricalValues& vertex_values, const VertexWeights& vertex_weights, 
+    double alpha, unsigned int nworkers, unsigned int nstep_max) {
+  const VertexType nvalues = ncategorical_values(vertex_values);
+  RandomWalkResult res;
+  VertexDoubleValues values(vertex_values.size());
+  for (VertexType type = 0; type <= nvalues; ++type) {
+    for (size_t i = 0; i < values.size(); ++i) {
+      values[i] = vertex_values[i] == type ? 1 : 0;
+    }
+    res.push_back(random_walk_continuous(graph, values, vertex_weights, alpha, 
+      nworkers, nstep_max));
+  }
+  return res;
 }
 
