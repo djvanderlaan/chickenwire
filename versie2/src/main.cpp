@@ -2,6 +2,7 @@
 #include "graph.h"
 #include "graph2.h"
 #include "random_walk.h"
+#include "shortest_path.h"
 
 #include <iostream>
 #include <iomanip>
@@ -184,7 +185,6 @@ int main(int argc, char* argv[]) {
 
   if (versie == 1) {
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-    
     Graph graph(true);
     for (unsigned int i = 0; i < size; ++i) {
       Vertex v;
@@ -197,17 +197,19 @@ int main(int argc, char* argv[]) {
     double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
     std::cout << "Generation took " << dif/1000.0 << " seconds." << std::endl;
 
-    t1 = std::chrono::high_resolution_clock::now();
-    my_computation(graph);
-    t2 = std::chrono::high_resolution_clock::now();
-    dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-    std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+    /*{
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      my_computation(graph);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
 
-    t1 = std::chrono::high_resolution_clock::now();
-    my_parallel_computation(graph);
-    t2 = std::chrono::high_resolution_clock::now();
-    dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-    std::cout << "Parallel computation took " << dif/1000.0 << " seconds." << std::endl;
+      t1 = std::chrono::high_resolution_clock::now();
+      my_parallel_computation(graph);
+      t2 = std::chrono::high_resolution_clock::now();
+      dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Parallel computation took " << dif/1000.0 << " seconds." << std::endl;
+    }*/
 
     {
       VertexDoubleValues values(size);
@@ -220,10 +222,10 @@ int main(int argc, char* argv[]) {
         sum += values[i];
       }
       std::cout << "MEAN=" << sum/size << "\n";
-      t1 = std::chrono::high_resolution_clock::now();
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
       VertexDoubleValues rw = random_walk_continuous(graph, values, 0.85, 2);
-      t2 = std::chrono::high_resolution_clock::now();
-      dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
       for (size_t i = 0; i < size; ++i) {
         std::cout << i << "\t\t" << rw[i] << "\n";
@@ -231,7 +233,7 @@ int main(int argc, char* argv[]) {
       }
     }
     
-    {
+    /*{
       VertexCategoricalValues values(size);
       VertexWeights weights(size);
       double sum = 0.0;
@@ -243,7 +245,7 @@ int main(int argc, char* argv[]) {
         sum += values[i];
       }
       std::cout << "MEAN=" << sum/size << "\n";
-      t1 = std::chrono::high_resolution_clock::now();
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
       RandomWalkResult rw = random_walk_categorical(graph, values, 0.85, 2);
       std::cout << rw.size() << "\n";
       for (size_t i = 0; i < rw[0].size(); ++i) {
@@ -254,9 +256,22 @@ int main(int argc, char* argv[]) {
         std::cout << "\n";
         if (i > 10) break;
       }
-      t2 = std::chrono::high_resolution_clock::now();
-      dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
+    }*/
+
+    {
+      std::cout << "All shortest path lengths\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      PathLengths res = all_shortest_path_lengths(graph, 1);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
+      for (size_t i = 0; i < res.size(); ++i) {
+        std::cout << i << "\t\t" << res[i] << "\n";
+        if (i > 10) break;
+      }
     }
   } 
 
