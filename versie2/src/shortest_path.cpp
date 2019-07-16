@@ -27,12 +27,12 @@ bool operator<(const QueueEl& a, const QueueEl& b) {
 // Calculate the length of the shortest path between two vertices
 template<typename T>
 void dijkstra(const Graph& graph, VertexID from, T& search) {
-  std::unordered_map<VertexID, double> path_lengths;
+  std::unordered_map<VertexID, QueueEl> path_lengths;
   //std::unordered_map<VertexID, VertexID> path_edges;
   std::priority_queue<QueueEl> queue;
 
   // Insert first node into the queue
-  path_lengths[from] = 0.0;
+  path_lengths[from] = QueueEl{0.0, from};
   queue.push(QueueEl{0.0, from});
 
   // Keep popping nodes from the queue and follow out edged of that node
@@ -49,9 +49,9 @@ void dijkstra(const Graph& graph, VertexID from, T& search) {
     for (auto j = edges.cbegin(); j != edges.cend(); ++j) {
       auto f = path_lengths.find(j->dst());
       double newl = path_length + j->weight();
-      if (f == path_lengths.end() || f->second > newl) {
+      if (f == path_lengths.end() || f->second.path_length > newl) {
         //path_edges[j->dst()] = vertex_id;
-        path_lengths[j->dst()] = newl;
+        path_lengths[j->dst()] = QueueEl{newl, vertex_id};
         queue.push(QueueEl{newl, j->dst()});
       }
     }
@@ -69,12 +69,12 @@ class ShortestPathSearch {
       return to_ == id;
     }
 
-    void finish(const std::unordered_map<VertexID, double>& path_lengths) { //, 
+    void finish(const std::unordered_map<VertexID, QueueEl>& path_lengths) { //, 
         //const std::unordered_map<VertexID, VertexID>& path_edges) {
       auto p = path_lengths.find(to_);
       result_ = (p == path_lengths.end()) ? 
         std::numeric_limits<double>::infinity() : 
-        p->second;
+        p->second.path_length;
     }
 
     double result() const {
@@ -100,10 +100,10 @@ class AllShortestPathSearch {
       return false;
     }
 
-    void finish(const std::unordered_map<VertexID, double>& path_lengths) { //, 
+    void finish(const std::unordered_map<VertexID, QueueEl>& path_lengths) { //, 
         //const std::unordered_map<VertexID, VertexID>& path_edges) {
       for (auto p = path_lengths.cbegin(); p != path_lengths.cend(); ++p) 
-        result_[p->first] = p->second;
+        result_[p->first] = p->second.path_length;
     }
 
     PathLengths result() const {
