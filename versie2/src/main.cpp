@@ -262,12 +262,45 @@ int main(int argc, char* argv[]) {
     }*/
 
     {
+      std::cout << "Shortest path length orig\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      double res = shortest_path_length(graph, 1, 2);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      std::cout << "Path length: " << res << "\n";
+    }
+
+    {
+      std::cout << "Shortest path length V2\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      double res = shortest_path_length2(graph, 1, 2);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      std::cout << "Path length: " << res << "\n";
+    }
+
+    {
       std::cout << "All shortest path lengths\n";
       std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
       PathLengths res = all_shortest_path_lengths(graph, 1);
       std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
       double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-      std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      for (size_t i = 0; i < res.size(); ++i) {
+        std::cout << i << "\t\t" << res[i] << "\n";
+        if (i > 10) break;
+      }
+    }
+
+    {
+      std::cout << "All shortest path lengths V2\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      PathLengths res = all_shortest_path_lengths2(graph, 1);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
       for (size_t i = 0; i < res.size(); ++i) {
         std::cout << i << "\t\t" << res[i] << "\n";
         if (i > 10) break;
