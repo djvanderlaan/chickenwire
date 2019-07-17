@@ -22,9 +22,10 @@ PathLengths all_shortest_path_lengths(const Graph& graph, VertexID from);
 // Get all shortest paths from a node
 Graph all_shortest_paths(const Graph& graph, VertexID from);
 
+// Diameter of the graph: maximum shortest path
+double diameter(const Graph& graph);
+double diameter(const Graph& graph, unsigned int nthreads);
 
-//// Diameter of the graph: maximum shortest path
-//int diameter(const Graph& graph);
 //
 //// ==== Connected components
 //// Defined in connected_components.cpp

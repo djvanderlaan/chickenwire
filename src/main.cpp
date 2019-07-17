@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 
   {
     VertexCategoricalValues values(size);
-    for (unsigned int i = 0; i < size; ++i) { 
+    for (int i = 0; i < size; ++i) { 
       const double r = ((double)std::rand() / RAND_MAX);
       values[i] = r > 0.1 ? 0 : 1;
       if (r > 0.85) values[i] = 2;
@@ -154,6 +154,8 @@ int main(int argc, char* argv[]) {
         RandomWalkResult res = random_walk_categorical(graph, values, 0.85, 2);
       }, "Random Walk Categorical");
   }
+
+  calc_diameter(graph);
 
 
   //filter_edges_on_type(graph, 2);

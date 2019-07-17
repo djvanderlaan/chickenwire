@@ -4,10 +4,10 @@
 #include <queue>
 #include <limits>
 
-//#include <thread>
-//#include <mutex>
-//#include <functional>
-//#include <cmath>
+#include <thread>
+#include <mutex>
+#include <functional>
+#include <cmath>
 
 class QueueEl {
   public: 
@@ -192,3 +192,79 @@ Graph all_shortest_paths(const Graph& graph, VertexID from) {
   dijkstra(graph, from, search);
   return search.result();
 }
+
+// ============================================================================
+// === Max Shortest Path                                                    ===
+// ============================================================================
+
+class MaxShortestPathLengthSearch {
+  public:
+    MaxShortestPathLengthSearch() : max_(0.0) {}
+
+    bool next(VertexID id, double path_length) { return false;}
+
+    void finish(const std::unordered_map<VertexID, QueueEl>& path_lengths) {
+      for (auto p = path_lengths.cbegin(); p != path_lengths.cend(); ++p) {
+        if (p->second.path_length > max_) max_ = p->second.path_length;
+      }
+    }
+
+    double result() const { return max_; }
+    
+  private:
+    double max_;
+};
+
+// Calculate the shortest path between a vertex and all other nodes; determine
+// the maximum value of that.
+double max_shortest_path(const Graph& graph, VertexID from) {
+  MaxShortestPathLengthSearch search;
+  dijkstra(graph, from, search);
+  return search.result();
+}
+
+// ============================================================================
+// === Diameter                                                             ===
+// ============================================================================
+// The diameter of a graph is the largest shortest path between any two nodes
+// in the graph
+
+
+void diameter_thread_fun(const Graph& graph, std::size_t begin, 
+    std::size_t end, int& result, std::mutex& mutex) {
+  const VertexList& v = graph.vertices();
+  int diameter = 0;
+  // forwarding to the place we have to start
+  auto p = v.begin() + begin;
+  // calculate maximum diameter
+  for (size_t i = begin; i < end; ++p, ++i) {
+    int d = max_shortest_path(graph, i);
+    if (d > diameter) diameter = d;
+  }
+  // update global diameter
+  std::lock_guard<std::mutex> guard(mutex);
+  if (diameter > result) result = diameter;
+}
+
+double diameter(const Graph& graph, unsigned int nthreads) {
+  if (nthreads == 0) throw std::runtime_error("Number of threads needs to be > 0.");
+  std::vector<std::thread> threads;
+  int diameter = 0;
+  std::mutex diameter_mutex;
+  std::size_t start = 0;
+  for (unsigned int i = 0; i < nthreads; ++i) {
+    std::size_t size = std::round((double)(graph.vertices().size() - start)/(nthreads-i));
+    threads.push_back(std::thread(diameter_thread_fun, std::ref(graph), 
+      start, start+size, std::ref(diameter), std::ref(diameter_mutex)));
+    start  += size;
+  }
+  for (unsigned int i = 0; i < nthreads; ++i) threads[i].join();
+  return diameter;
+}
+
+double diameter(const Graph& graph) {
+  unsigned int nthreads = std::min(std::thread::hardware_concurrency(), 
+    std::max((unsigned int)graph.vertices().size()/512, 1U));
+  return diameter(graph, nthreads);
+}
+
