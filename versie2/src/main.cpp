@@ -262,7 +262,7 @@ int main(int argc, char* argv[]) {
     }
 
     {
-      std::cout << "Shortest path length orig\n";
+      std::cout << "Shortest path length\n";
       std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
       double res = shortest_path_length(graph, 1, 2);
       std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
@@ -272,34 +272,9 @@ int main(int argc, char* argv[]) {
     }
 
     {
-      std::cout << "Shortest path length V2\n";
-      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-      double res = shortest_path_length2(graph, 1, 2);
-      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
-      std::cout << "Path length: " << res << "\n";
-    }
-
-    {
-      std::cout << "Shortest path orig\n";
+      std::cout << "Shortest path\n";
       std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
       Path res = shortest_path(graph, 1, 2);
-      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
-      for (size_t i = 0; i < res.size(); ++i) {
-        auto e = res[i];
-        std::cout << e.vertex_id << "(" << e.path_length << ") ";
-        if (i > 10) break;
-      }
-      std::cout << "\n";
-    }
-
-    {
-      std::cout << "Shortest path V2\n";
-      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-      Path res = shortest_path2(graph, 1, 2);
       std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
       double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
@@ -325,43 +300,9 @@ int main(int argc, char* argv[]) {
     }
 
     {
-      std::cout << "All shortest path lengths V2\n";
-      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-      PathLengths res = all_shortest_path_lengths2(graph, 1);
-      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
-      for (size_t i = 0; i < res.size(); ++i) {
-        std::cout << i << "\t\t" << res[i] << "\n";
-        if (i > 10) break;
-      }
-    }
-
-    {
       std::cout << "All shortest paths\n";
       std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
       Graph res = all_shortest_paths(graph, 1);
-      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
-      // Output path from 2 to 1 
-      VertexID id = 2;
-      for (size_t i = 0; i < 20; ++i) {
-        const Vertex& vertex = res.vertex(id);
-        const EdgeList& edges = vertex.edges();
-        for (auto p = edges.cbegin(); p != edges.cend(); ++p) {
-          std::cout << id << "(" << p->weight() << ") ";
-          id = p->dst();
-        }
-        if (id == 1) break;
-      }
-      std::cout << "\n";
-    }
-
-    {
-      std::cout << "All shortest paths V2\n";
-      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-      Graph res = all_shortest_paths2(graph, 1);
       std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
       double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
