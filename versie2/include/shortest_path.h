@@ -17,6 +17,8 @@ struct PathElement {
 typedef std::vector<PathElement> Path;
 Path shortest_path(const Graph& graph, VertexID from, VertexID to);
 
+Path shortest_path2(const Graph& graph, VertexID from, VertexID to);
+
 // Get the lengths of all shortest paths from a node
 //typedef std::unordered_map<VertexID, double> PathLengths;
 typedef std::vector<double> PathLengths;
@@ -26,6 +28,7 @@ PathLengths all_shortest_path_lengths2(const Graph& graph, VertexID from);
 
 // Get all shortest paths from a node
 Graph all_shortest_paths(const Graph& graph, VertexID from);
+Graph all_shortest_paths2(const Graph& graph, VertexID from);
 
 
 //// Diameter of the graph: maximum shortest path

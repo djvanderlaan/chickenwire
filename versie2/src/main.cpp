@@ -211,7 +211,7 @@ int main(int argc, char* argv[]) {
       std::cout << "Parallel computation took " << dif/1000.0 << " seconds." << std::endl;
     }*/
 
-    {
+    if (false) {
       VertexDoubleValues values(size);
       VertexWeights weights(size);
       double sum = 0.0;
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
       }
     }
     
-    /*{
+    if (false) {
       VertexCategoricalValues values(size);
       VertexWeights weights(size);
       double sum = 0.0;
@@ -259,7 +259,7 @@ int main(int argc, char* argv[]) {
       std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
       double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "RW computation took " << dif/1000.0 << " seconds." << std::endl;
-    }*/
+    }
 
     {
       std::cout << "Shortest path length orig\n";
@@ -279,6 +279,36 @@ int main(int argc, char* argv[]) {
       double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
       std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
       std::cout << "Path length: " << res << "\n";
+    }
+
+    {
+      std::cout << "Shortest path orig\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      Path res = shortest_path(graph, 1, 2);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      for (size_t i = 0; i < res.size(); ++i) {
+        auto e = res[i];
+        std::cout << e.vertex_id << "(" << e.path_length << ") ";
+        if (i > 10) break;
+      }
+      std::cout << "\n";
+    }
+
+    {
+      std::cout << "Shortest path V2\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      Path res = shortest_path2(graph, 1, 2);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      for (size_t i = 0; i < res.size(); ++i) {
+        auto e = res[i];
+        std::cout << e.vertex_id << "(" << e.path_length << ") ";
+        if (i > 10) break;
+      }
+      std::cout << "\n";
     }
 
     {
@@ -306,6 +336,49 @@ int main(int argc, char* argv[]) {
         if (i > 10) break;
       }
     }
+
+    {
+      std::cout << "All shortest paths\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      Graph res = all_shortest_paths(graph, 1);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      // Output path from 2 to 1 
+      VertexID id = 2;
+      for (size_t i = 0; i < 20; ++i) {
+        const Vertex& vertex = res.vertex(id);
+        const EdgeList& edges = vertex.edges();
+        for (auto p = edges.cbegin(); p != edges.cend(); ++p) {
+          std::cout << id << "(" << p->weight() << ") ";
+          id = p->dst();
+        }
+        if (id == 1) break;
+      }
+      std::cout << "\n";
+    }
+
+    {
+      std::cout << "All shortest paths V2\n";
+      std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+      Graph res = all_shortest_paths2(graph, 1);
+      std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+      double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+      std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+      // Output path from 2 to 1 
+      VertexID id = 2;
+      for (size_t i = 0; i < 20; ++i) {
+        const Vertex& vertex = res.vertex(id);
+        const EdgeList& edges = vertex.edges();
+        for (auto p = edges.cbegin(); p != edges.cend(); ++p) {
+          std::cout << id << "(" << p->weight() << ") ";
+          id = p->dst();
+        }
+        if (id == 1) break;
+      }
+      std::cout << "\n";
+    }
+
   } 
 
   if (versie == 2) {
