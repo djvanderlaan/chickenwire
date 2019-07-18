@@ -2,6 +2,7 @@
 #include "graph.h"
 #include "random_walk.h"
 #include "shortest_path.h"
+#include "connected_components.h"
 
 #include <iostream>
 #include <iomanip>
@@ -151,7 +152,7 @@ int main(int argc, char* argv[]) {
     std::cout << "\n";
   }
 
-  {
+  if (false) {
     std::cout << "Diameter\n";
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     double res = diameter(graph);
@@ -159,6 +160,16 @@ int main(int argc, char* argv[]) {
     double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
     std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
     std::cout << "Max shortest path: " << res << "\n";
+  }
+
+  {
+    std::cout << "Connected components\n";
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    size_t res = nconnected_components(graph);
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+    std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+    std::cout << "Number of components: " << res << "\n";
   }
 
   return 0;
