@@ -3,6 +3,7 @@
 #include "random_walk.h"
 #include "shortest_path.h"
 #include "connected_components.h"
+#include "degree_distribution.h"
 
 #include <iostream>
 #include <iomanip>
@@ -170,6 +171,17 @@ int main(int argc, char* argv[]) {
     double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
     std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
     std::cout << "Number of components: " << res << "\n";
+  }
+
+  {
+    std::cout << "Mean degree\n";
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    double resin = mean_in_degree(graph);
+    double resout = mean_out_degree(graph);
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    double dif = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+    std::cout << "Computation took " << dif/1000.0 << " seconds." << std::endl;
+    std::cout << "Indegree: " << resin << " out=" << resout << "\n";
   }
 
   return 0;
