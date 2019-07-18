@@ -2,9 +2,9 @@
 #define graph_h
 
 #include "vertex.h"
-#include <unordered_map>
+#include <vector>
 
-typedef std::unordered_map<VertexID, Vertex> VertexList;
+typedef std::vector<Vertex> VertexList;
 typedef VertexList::size_type GraphSize;
 
 class Graph {
@@ -23,45 +23,51 @@ class Graph {
       directed_ = directed;
     }
 
-    void add_vertex(VertexID id) {
-      vertices_[id] = Vertex(id);
+    VertexID add_vertex(const Vertex& vertex) {
+      vertices_.push_back(vertex);
+      return vertices_.size() - 1;
     }
 
-    void add_vertex(const Vertex& vertex) {
-      vertices_[vertex.id()] = vertex;
+    void add_vertex(VertexID id, const Vertex& vertex) {
+      if (id >= vertices_.size()) {
+        vertices_.resize(id+1);
+      }
+      vertices_[id] = vertex;
+    }
+
+    void add_vertex(VertexID id) {
+      add_vertex(id, Vertex());
     }
 
     void add_vertex_if_not_exists(VertexID id) {
-      VertexList::const_iterator p = vertices_.find(id);
-      if (p == vertices_.end()) vertices_[id] = Vertex(id);
+      if (id >= vertices_.size()) {
+        add_vertex(id, Vertex());
+      }
     }
 
     bool vertex_exists(VertexID id) const {
-      VertexList::const_iterator p = vertices_.find(id);
-      return p != vertices_.end();
+      return id < vertices_.size();
     }
 
     const Vertex& vertex(VertexID id) const {
-      VertexList::const_iterator p = vertices_.find(id);
-      if (p == vertices_.end()) 
-        throw std::runtime_error("Invalid vertex id: " + std::to_string(id) + ".");
-      return p->second;
+      // TODO: do we need range checking; or also non-range-checked variant?
+      return vertices_.at(id);
     }
     
     void add_edge(VertexID from, VertexID to, EdgeWeight weight = 1.0, EdgeType type = 0) {
       Vertex& from_vertex = get_vertex(from);
-      Vertex& to_vertex = get_vertex(to);
       from_vertex.add_edge(to, weight, type);
       if (!directed()) {
+        Vertex& to_vertex = get_vertex(to);
         to_vertex.add_edge(from, weight, type);
       }
     }
 
     void remove_edge(VertexID from, VertexID to) {
       Vertex& from_vertex = get_vertex(from);
-      Vertex& to_vertex = get_vertex(to);
       from_vertex.remove_edge(to);
       if (!directed()) {
+        Vertex& to_vertex = get_vertex(to);
         to_vertex.remove_edge(from);
       }
     }
@@ -72,9 +78,7 @@ class Graph {
 
   private:
     Vertex& get_vertex(VertexID id) {
-      VertexList::iterator p = vertices_.find(id);
-      if (p == vertices_.end()) throw std::runtime_error("Invalid vertex id.");
-      return p->second;
+      return vertices_.at(id);
     }
 
   private:

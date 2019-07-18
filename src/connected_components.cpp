@@ -1,42 +1,41 @@
-#include "functions.h"
+#include "connected_components.h"
+#include <unordered_set>
 
-#include<unordered_map>
-#include<thread>
-#include<mutex>
-#include<functional>
-#include<cmath>
-#include<vector>
-
-#include<iostream>
-#include<iomanip>
-
-Components connected_components(const Graph& graph) {
-  Components components;
-  
-  // Initialise components
+std::vector<VertexID> connected_components(const Graph& graph) {
   const VertexList& vertices = graph.vertices();
-  for (auto p = vertices.begin(); p != vertices.end(); ++p) 
-    components[p->first] = p->first;
+
+  // Initialise components: put each vertex in its own component, labelled 
+  // conveniently equal to the vertexid
+  std::vector<VertexID> components(vertices.size());
+  for (VertexID i = 0; i < vertices.size(); ++i) components[i] = i;
 
   bool iterate = true;
-  while(iterate) {
+  while (iterate) {
     iterate = false;
-    for (auto p = vertices.begin(); p != vertices.end(); ++p) {
-      const EdgeList& edges = p->second.edges();
+    VertexID i = 0;
+    for (auto p = vertices.cbegin(); p != vertices.cend(); ++p, ++i) {
+      const EdgeList& edges = p->edges();
+      VertexID id_src = components[i];
       for (auto q = edges.cbegin(); q != edges.cend(); ++q) {
-        if (components[q->dst()] > components[p->first]) {
-          components[q->dst()] = components[p->first];
+        VertexID id_dst = components[q->dst()];
+        if (id_dst > id_src) {
+          components[q->dst()] = id_src;
           iterate = true;
-        } else if (components[q->dst()] < components[p->first]) {
-          components[p->first] = components[q->dst()];
+        } else if (id_dst < id_src) {
+          components[i] = id_dst;
           iterate = true;
         }
       }
-      // TODO test code
     }
   }
-
-
   return components;
+}
+
+size_t nconnected_components(const Graph& graph) {
+  std::vector<VertexID> components = connected_components(graph);
+  std::unordered_set<VertexID> unique_components;
+  for (auto p = components.cbegin(); p != components.cend(); ++p) 
+    unique_components.insert(*p);
+  return unique_components.size();
 }
 

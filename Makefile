@@ -1,18 +1,18 @@
 
-SOURCEDIR     = src
-INCLUDEDIR    = include
-TMPDIR        = tmp
+SOURCEDIR  = src
+INCLUDEDIR = include
+TMPDIR     = tmp
 
-CXX      = g++
-CXXFLAGS = -O2 -std=c++11 -I$(INCLUDEDIR) -Wall
-#CXXFLAGS = -pg -std=c++11 -I$(INCLUDEDIR) -Wall
-LIBS     = -pthread
+CXX        = g++
+CXXFLAGS   = -O2 -std=c++11 -I$(INCLUDEDIR) -Wall
+#CXXFLAGS  = -pg -std=c++11 -I$(INCLUDEDIR) -Wall
+LIBS       = -pthread
 
-VPATH    = $(INCLUDEDIR):$(SOURCEDIR):$(TMPDIR)
+VPATH      = $(INCLUDEDIR):$(SOURCEDIR):$(TMPDIR)
 
-target   = chickenwire
-sources  = $(wildcard src/*.cpp)
-objects  = $(notdir $(patsubst %.cpp, %.o, $(sources)))
+target     = chickenwire
+sources    = $(wildcard src/*.cpp)
+objects    = $(notdir $(patsubst %.cpp, %.o, $(target).cpp $(sources)))
 
 $(target): $(objects) 
 	@echo "Linking..."

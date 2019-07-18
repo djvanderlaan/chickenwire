@@ -10,10 +10,8 @@
 
 class Vertex {
   public:
-    Vertex(VertexID id = 0, VertexType type = 0) : id_(id), type_(type) { }
+    Vertex(VertexType type = 0) : type_(type) { }
     ~Vertex() { }
-
-    VertexID id() const { return id_;}
 
     void type(VertexType type) { type_ = type;}
     VertexType type() const { return type_;}
@@ -26,7 +24,7 @@ class Vertex {
       EdgeList::iterator p = find_edge(edges_, dst);
       if (p == edges_.end()) 
         throw std::runtime_error("No edge to vertex id " + 
-          std::to_string(dst) + " from " + std::to_string(id_) + ".");
+          std::to_string(dst) + ".");
       edges_.erase(p);
     }
 
@@ -46,7 +44,6 @@ class Vertex {
     EdgeList& edges_nonconst() { return edges_;}
 
   private:
-    VertexID id_;
     VertexType type_;
     EdgeList edges_;
 };
