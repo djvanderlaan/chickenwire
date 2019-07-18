@@ -38,3 +38,4 @@ size_t nconnected_components(const Graph& graph) {
     unique_components.insert(*p);
   return unique_components.size();
 }
+
