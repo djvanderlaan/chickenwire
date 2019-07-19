@@ -18,7 +18,7 @@ and \code{\link{add_vertices}}. See those functions for examples.
 Create empty graph
 }
 \details{
-Internally the graph is alweys stored as a directed graph. The option to 
+Internally the graph is always stored as a directed graph. The option to 
 specify that the graph is undirected has mainly effect when adding edges: 
 when the edge A->B is added, the edge B->A is also added automatically.
 }

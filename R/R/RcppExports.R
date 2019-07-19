@@ -25,12 +25,12 @@ rcpp_edges <- function(graph_id) {
     .Call('_chickenwire_rcpp_edges', PACKAGE = 'chickenwire', graph_id)
 }
 
-rcpp_local_average_cont <- function(graph_id, id, value, vwght) {
-    .Call('_chickenwire_rcpp_local_average_cont', PACKAGE = 'chickenwire', graph_id, id, value, vwght)
+rcpp_local_average_cont <- function(graph_id, value, vwght) {
+    .Call('_chickenwire_rcpp_local_average_cont', PACKAGE = 'chickenwire', graph_id, value, vwght)
 }
 
-rcpp_local_average_cat <- function(graph_id, id, value, vwght) {
-    .Call('_chickenwire_rcpp_local_average_cat', PACKAGE = 'chickenwire', graph_id, id, value, vwght)
+rcpp_local_average_cat <- function(graph_id, value, vwght) {
+    .Call('_chickenwire_rcpp_local_average_cat', PACKAGE = 'chickenwire', graph_id, value, vwght)
 }
 
 rcpp_graph_size <- function(graph_id) {

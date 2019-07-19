@@ -12,8 +12,8 @@ Rcpp::List rcpp_vertices(int graph_id) {
   Rcpp::IntegerVector type(vertices.size());
   VertexList::size_type i = 0;
   for (auto p = vertices.cbegin(), end = vertices.cend(); p != end; ++p, ++i) {
-    id[i] = p->first;
-    type[i] = p->second.type();
+    id[i] = i;
+    type[i] = p->type();
   }
   Rcpp::List res(2);
   res[0] = id;

@@ -1,63 +1,54 @@
-
 #include "rcpp_graph_store.h"
 #include "graph.h"
 #include "random_walk.h"
-#include "filter_edges.h"
-#include "random_walk.h"
+#include "weigh_edges.h"
 
 #include <Rcpp.h>
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_local_average_cont(int graph_id, Rcpp::IntegerVector id, Rcpp::NumericVector value, 
-    Rcpp::NumericVector vwght) {
+Rcpp::NumericVector rcpp_local_average_cont(int graph_id, Rcpp::NumericVector value, Rcpp::NumericVector vwght) {
   Graph* graph = get_graph(graph_id);
   // Create values object
-  VertexWDoubleValues values;
+  VertexDoubleValues values(value.size());
+  VertexDoubleValues weights(value.size());
   // Add vertices to graph and values to values object
-  for (R_xlen_t i = 0, j = 0, k =0, end = id.size(); i < end; ++i, ++j, ++k) {
-    if (j >= value.size()) j = 0;
-    if (k >= vwght.size()) k = 0;
-    values[id[i]] = {value[j], vwght[k]};
+  for (R_xlen_t i = 0, j = 0, end = value.size(); i < end; ++i, ++j) {
+    if (j >= vwght.size()) j = 0;
+    values[i] = value[i];
+    weights[i] = vwght[j];
   }
   // Reweigh graph
-  reweigh_edges_by_vertex_and_type(*graph);
+  reweigh_edges_by_vertex_and_layer(*graph);
   // Random walk
-  RandomWalkResult rw = random_walk_continuous(*graph, values, 0.85);
+  VertexDoubleValues rw = random_walk_continuous(*graph, values, weights, 0.85);
   // Generate result object
-  Rcpp::List res(rw.nvalues());
-  for (R_xlen_t j = 0, jend = rw.nvalues(); j < jend; ++j) {
-    Rcpp::NumericVector v(id.size());
-    for (R_xlen_t i = 0, iend = id.size(); i < iend; ++i) {
-      v[i] = rw.get(id[i], j);
-    } 
-    res[j] = v;
-  }
+  Rcpp::NumericVector res(rw.size());
+  for (size_t i = 0; i < rw.size(); ++i) res[i] = rw[i];
   return res;
 }
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_local_average_cat(int graph_id, Rcpp::IntegerVector id, Rcpp::IntegerVector value, 
-    Rcpp::NumericVector vwght) {
+Rcpp::List rcpp_local_average_cat(int graph_id, Rcpp::IntegerVector value, Rcpp::NumericVector vwght) {
   Graph* graph = get_graph(graph_id);
   // Create values object
-  VertexWCategoricalValues values;
+  VertexCategoricalValues values(value.size());
+  VertexDoubleValues weights(value.size());
   // Add vertices to graph and values to values object
-  for (R_xlen_t i = 0, j = 0, k =0, end = id.size(); i < end; ++i, ++j, ++k) {
-    if (j >= value.size()) j = 0;
-    if (k >= vwght.size()) k = 0;
-    values[id[i]] = {static_cast<VertexType>(value[j]), vwght[k]};
+  for (R_xlen_t i = 0, j = 0, end = value.size(); i < end; ++i, ++j) {
+    if (j >= vwght.size()) j = 0;
+    values[i] = value[i];
+    weights[i] = vwght[j];
   }
   // Reweigh graph
-  reweigh_edges_by_vertex_and_type(*graph);
+  reweigh_edges_by_vertex_and_layer(*graph);
   // Random walk
-  RandomWalkResult rw = random_walk_categorical(*graph, values, 0.85);
+  RandomWalkResult rw = random_walk_categorical(*graph, values, weights, 0.85);
   // Generate result object
-  Rcpp::List res(rw.nvalues());
-  for (R_xlen_t j = 0, jend = rw.nvalues(); j < jend; ++j) {
-    Rcpp::NumericVector v(id.size());
-    for (R_xlen_t i = 0, iend = id.size(); i < iend; ++i) {
-      v[i] = rw.get(id[i], j);
-    } 
+  Rcpp::List res(rw.size());
+  for (size_t j = 0, jend = rw.size(); j < jend; ++j) {
+    VertexDoubleValues& r = rw[j];
+    Rcpp::NumericVector v(r.size());
+    for (size_t i = 0; i < r.size(); ++i) v[i] = r[i];
     res[j] = v;
   }
   return res;

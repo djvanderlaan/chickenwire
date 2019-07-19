@@ -53,29 +53,27 @@ add_edges <- function(graph_id, edges, vertices, edge_src_col = 1, edge_dst_col 
 
   edge_src <- edges[, edge_src_col]
   edge_dst <- edges[, edge_dst_col]
-  if (!missing(vertices)) {
-    if (is.numeric(vertices)) {
-      vertex_id <- vertices
-    } else {
-      vertex_id <- vertices[, vertex_id_col]
-    }
-  }
+
+  if (missing(vertices)) 
+    vertices <- unique(c(edge_src, edge_dst))
+  if (is.data.frame(vertices)) 
+    vertices <- vertices[, vertex_id_col]
+  edge_src <- match(edge_src, vertices) - 1L
+  edge_dst <- match(edge_dst, vertices) - 1L
+  vertex_id <- seq_along(vertices) - 1L
+
   edge_weight <- if (!missing(edge_weight_col)) 
     edges[, edge_weight_col] else 1.0
   edge_type <- if (!missing(edge_type_col)) 
     edges[, edge_type_col] else 1L
-  if (is.factor(edge_type) || is.character(edge_type)) {
+  if (is.factor(edge_type) || is.character(edge_type)) 
     edge_type <- as.integer(as.factor(edge_type)) - 1
-  }
   check_edges(edge_src, edge_dst, edge_weight, edge_type)
 
-  if (missing(vertices)) {
-    rcpp_add_edges(graph_id, edge_src, edge_dst, edge_weight, edge_type, 
-      auto_add_vertices)
-  } else {
-    rcpp_add_vertices(graph_id, vertex_id)
-    rcpp_add_edges(graph_id, edge_src, edge_dst, edge_weight, edge_type, FALSE)
-  }
+  rcpp_add_vertices(graph_id, vertex_id)
+  rcpp_add_edges(graph_id, edge_src, edge_dst, edge_weight, edge_type, FALSE)
+  # TODO: store vertex ids with graph; we need those when we want to add
+  # additional edges/vertices
   graph_id
 }
 

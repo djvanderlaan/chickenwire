@@ -11,7 +11,7 @@ Rcpp::List rcpp_edges(int graph_id) {
   // determine number of edges
   VertexList::size_type nedges = 0;
   for (auto p = vertices.cbegin(), end = vertices.cend(); p != end; ++p) {
-    nedges += p->second.degree();
+    nedges += p->degree();
   }
   // Initialise vectors
   Rcpp::IntegerVector src(nedges);
@@ -20,10 +20,11 @@ Rcpp::List rcpp_edges(int graph_id) {
   Rcpp::IntegerVector type(nedges);
   // Fill
   VertexList::size_type i = 0;
-  for (auto p = vertices.cbegin(), end = vertices.cend(); p != end; ++p) {
-    const EdgeList& edges = p->second.edges();
+  VertexList::size_type vertexid = 0;
+  for (auto p = vertices.cbegin(), end = vertices.cend(); p != end; ++p, ++vertexid) {
+    const EdgeList& edges = p->edges();
     for (auto q = edges.cbegin(), qend = edges.cend(); q != qend; ++q, ++i) {
-      src[i]    = p->first;
+      src[i]    = vertexid;
       dst[i]    = q->dst();
       weight[i] = q->weight();
       type[i]   = q->type();

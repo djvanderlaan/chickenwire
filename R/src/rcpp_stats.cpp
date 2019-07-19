@@ -6,7 +6,7 @@
 inline VertexList::size_type nedges(const Graph& graph) {
   VertexList::size_type n = 0;
   for (auto p = graph.vertices().cbegin(), end = graph.vertices().cend(); p != end; ++p) {
-    n += p->second.degree();
+    n += p->degree();
   }
   return n;
 }
