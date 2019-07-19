@@ -12,3 +12,10 @@ clean:
 
 document:
 	Rscript  -e "roxygen2::roxygenise()"
+
+
+test: 
+	for file in tests/test*; do \
+	  Rscript -e "devtools::load_all(); source('$$file')";\
+	done
+

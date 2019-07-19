@@ -1,10 +1,11 @@
+cat("Local averate continuous\n")
+
 library(chickenwire)
 
 g2 <- create_graph()
 g2 <- add_edges(g2, data.frame(src = c(1,1,2,2,3,3), dst = c(2,3,1,3,1,2)), 
   vertices = 1:4)
 
-cat("Local averate continuous\n")
 
 cat("A")
 rw <- local_average(g2, vertex_values = c(0, 0, 0, 0))
@@ -70,3 +71,4 @@ tst <- abs(rw$B + rw$A - 1) < 1E-4
 stopifnot(all.equal(tst, c(TRUE, TRUE, TRUE, NA)))
 cat(" OK\n")
 
+delete_graph(g2)
