@@ -37,6 +37,10 @@ rcpp_graph_size <- function(graph_id) {
     .Call('_chickenwire_rcpp_graph_size', PACKAGE = 'chickenwire', graph_id)
 }
 
+rcpp_nvertices <- function(graph_id) {
+    .Call('_chickenwire_rcpp_nvertices', PACKAGE = 'chickenwire', graph_id)
+}
+
 rcpp_is_directed <- function(graph_id) {
     .Call('_chickenwire_rcpp_is_directed', PACKAGE = 'chickenwire', graph_id)
 }

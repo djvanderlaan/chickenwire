@@ -21,6 +21,13 @@ Rcpp::IntegerVector rcpp_graph_size(int graph_id) {
 }
 
 // [[Rcpp::export]]
+int rcpp_nvertices(int graph_id) {
+  const Graph* graph = get_graph(graph_id);
+  return graph->vertices().size();
+}
+
+
+// [[Rcpp::export]]
 bool rcpp_is_directed(int graph_id) {
   const Graph* graph = get_graph(graph_id);
   return graph->directed();

@@ -37,8 +37,7 @@ local_average <- function(graph_id, vertex_values, vertex_weights = 1.0) {
   } else if (is.logical(vertex_values)) {
     vertex_values <- 1.0 * vertex_values;
   }
-  stopifnot(is.numeric(vertex_values) && length(vertex_values) >= 1)
-  # TODO: checok that vertex_Values has length nvertices
+  stopifnot(is.numeric(vertex_values) && length(vertex_values) == nvertices(graph_id))
   stopifnot(!any(is.na(vertex_values)))
   # random_walk
   if (value_factor) {
