@@ -19,7 +19,7 @@ void reweigh_edges_by_vertex(Graph& graph, EdgeWeight scale) {
   }
 }
 
-void reweigh_edges_by_vertex_and_type(Graph& graph, EdgeWeight scale) {
+void reweigh_edges_by_vertex_and_layer(Graph& graph, EdgeWeight scale) {
   VertexList& vertices = graph.vertices_nonconst();
   for (auto vertexp = vertices.begin(); vertexp != vertices.end(); ++vertexp) {
     EdgeList& edges = vertexp->edges_nonconst();
