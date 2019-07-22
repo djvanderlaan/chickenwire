@@ -29,7 +29,9 @@ class Chunker {
       chunk_indices_.push_back(pos);
       for (size_t i = 0; i < nchunks_; ++i) {
         size_t remain = size_ - pos;
-        size_t chunk_size = std::max((remain)/(nchunks_-i), 1UL);
+        //size_t chunk_size = std::max((remain)/(nchunks_-i), 1UL);
+        size_t chunk_size = (remain)/(nchunks_-i);
+        if (chunk_size < 1) chunk_size = 1;
         chunk_size = std::min(chunk_size, remain);
         p = std::next(p, chunk_size);
         pos += chunk_size;
