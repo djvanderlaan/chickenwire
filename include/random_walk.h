@@ -22,11 +22,11 @@ VertexDoubleValues random_walk_continuous(const Graph& graph, const VertexDouble
 
 RandomWalkResult random_walk_categorical(const Graph& graph, 
   const VertexCategoricalValues& vertex_values, 
-  double alpha = 0.85, unsigned int nworkers = 0, unsigned int nstep_max = 100);
+  double alpha = 0.85, unsigned int nworkers = 0, unsigned int nstep_max = 200);
 
 RandomWalkResult random_walk_categorical(const Graph& graph, 
   const VertexCategoricalValues& vertex_values, 
   const VertexWeights& vertex_weights, 
-  double alpha = 0.85, unsigned int nworkers = 0, unsigned int nstep_max = 100);
+  double alpha = 0.85, unsigned int nworkers = 0, unsigned int nstep_max = 200);
 
 #endif
