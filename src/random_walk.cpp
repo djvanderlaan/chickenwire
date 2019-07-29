@@ -74,24 +74,28 @@ class RandomWalkContinuousComputation {
 
 VertexDoubleValues random_walk_continuous(const Graph& graph, 
     const VertexDoubleValues& vertex_values, 
-    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision) {
+    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision,
+    int* nsteps) {
   if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
   RandomWalkContinuousComputation computation(nworkers, graph.vertices(), vertex_values, alpha);
   computation.precision(precision);
   Stepper<RandomWalkContinuousComputation> stepper(computation);
   stepper.run(nworkers, nstep_max);
+  if (nsteps) (*nsteps) = stepper.step();
   return computation.result();
 }
 
 VertexDoubleValues random_walk_continuous(const Graph& graph, 
     const VertexDoubleValues& vertex_values, const VertexWeights& vertex_weights,
-    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision) {
+    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision,
+    int* nsteps) {
   if (nworkers == 0) nworkers = determine_nthreads(graph.vertices().size());
   RandomWalkContinuousComputation computation(nworkers, graph.vertices(), vertex_values, 
     vertex_weights, alpha);
   computation.precision(precision);
   Stepper<RandomWalkContinuousComputation> stepper(computation);
   stepper.run(nworkers, nstep_max);
+  if (nsteps) (*nsteps) = stepper.step();
   return computation.result();
 }
 
@@ -108,7 +112,8 @@ inline VertexType ncategorical_values(const VertexCategoricalValues& values) {
 
 RandomWalkResult random_walk_categorical(const Graph& graph, 
     const VertexCategoricalValues& vertex_values, 
-    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision) {
+    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision,
+    int* nsteps) {
   const VertexType nvalues = ncategorical_values(vertex_values);
   RandomWalkResult res;
   VertexDoubleValues values(vertex_values.size());
@@ -117,14 +122,15 @@ RandomWalkResult random_walk_categorical(const Graph& graph,
       values[i] = vertex_values[i] == type ? 1 : 0;
     }
     res.push_back(random_walk_continuous(graph, values, alpha, 
-      nworkers, nstep_max, precision));
+      nworkers, nstep_max, precision, nsteps));
   }
   return res;
 }
 
 RandomWalkResult random_walk_categorical(const Graph& graph, 
     const VertexCategoricalValues& vertex_values, const VertexWeights& vertex_weights, 
-    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision) {
+    double alpha, unsigned int nworkers, unsigned int nstep_max, double precision, 
+    int* nsteps) {
   const VertexType nvalues = ncategorical_values(vertex_values);
   RandomWalkResult res;
   VertexDoubleValues values(vertex_values.size());
@@ -133,7 +139,7 @@ RandomWalkResult random_walk_categorical(const Graph& graph,
       values[i] = vertex_values[i] == type ? 1 : 0;
     }
     res.push_back(random_walk_continuous(graph, values, vertex_weights, alpha, 
-      nworkers, nstep_max, precision));
+      nworkers, nstep_max, precision, nsteps));
   }
   return res;
 }
