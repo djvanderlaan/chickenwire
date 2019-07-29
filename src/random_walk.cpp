@@ -1,6 +1,7 @@
 #include "random_walk.h"
 #include "stepper.h"
 #include "chunker.h"
+#include <cmath>
 
 class RandomWalkContinuousComputation {
   public:
@@ -50,7 +51,8 @@ class RandomWalkContinuousComputation {
         wsum_[i] += (1-alpha_) * w_cur[i];
         w_cur[i] *= alpha_;
         x_cur[i] *= alpha_;
-        stop &= std::abs(xsum_[i]/wsum_[i] - y_prev) < precision_;
+        double y_new = xsum_[i]/wsum_[i];
+        stop &= std::isnan(y_new) || std::abs(y_new - y_prev) < precision_;
       }
       return stop;
     }
